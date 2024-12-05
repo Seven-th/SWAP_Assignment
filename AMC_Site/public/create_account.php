@@ -8,7 +8,7 @@ Created 28 Nov 2024 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account</title>
-    <link rel="stylesheet" href="../assets/styles/createAccount.css">
+    <link rel="stylesheet" href="../assets/styles/create_account.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
 </head>
 <body>
