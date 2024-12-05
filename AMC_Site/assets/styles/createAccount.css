@@ -1,122 +1,121 @@
-/* General styles */
-* {
+/* General Reset */
+body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Product Sans', sans-serif; /* Using Product Sans font */
-}
-
-body {
-    background-color: #f4f4f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    color: #333;
-}
-
-/* Create account container */
-.create-account-container {
-    background-color: #fff;
-    border-radius: 16px;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    width: 100%;
-    max-width: 400px;
-}
-
-/* Form styles */
-.create-account-form {
+    font-family: 'Product Sans', sans-serif;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f4f4f9;
 }
 
-/* Title */
-h1 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
+/* Tab Bar Styles */
+.tab-bar {
+    display: flex;
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+    transition: color 0.3s;
+}
+
+.tab:hover {
+    color: #007bff;
+}
+
+.tab-indicator {
+    position: absolute;
+    bottom: 0;
+    height: 4px;
+    width: 33.33%;
+    background-color: #007bff;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Active Tab */
+.tab.active {
+    color: #007bff;
+}
+
+/* Form Styles */
+.create-account-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.create-account-form h1 {
     text-align: center;
     color: #333;
 }
 
-/* Form group */
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 15px;
 }
 
-label {
-    font-size: 0.9rem;
-    color: #555;
-    margin-bottom: 0.5rem;
+.form-group label {
     display: block;
-}
-
-/* Input fields */
-input[type="email"],
-input[type="text"],
-input[type="password"] {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
+    margin-bottom: 5px;
+    font-size: 14px;
     color: #555;
 }
 
-input[type="email"]:focus,
-input[type="text"]:focus,
-input[type="password"]:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
-/* Submit button */
 .create-account-button {
+    width: 100%;
+    padding: 10px;
     background-color: #007bff;
     color: white;
     border: none;
-    padding: 0.75rem;
-    border-radius: 8px;
-    font-size: 1rem;
+    border-radius: 5px;
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 100%; /* Make the button span the full width */
+    transition: background-color 0.3s;
 }
 
 .create-account-button:hover {
     background-color: #0056b3;
 }
 
-/* Footer link */
 .form-footer {
-    margin-top: 1rem;
     text-align: center;
-    font-size: 0.9rem;
+    margin-top: 15px;
 }
 
 .form-footer a {
     color: #007bff;
     text-decoration: none;
-    transition: color 0.3s ease;
 }
 
 .form-footer a:hover {
-    color: #0056b3;
-}
-
-.form-footer span {
-    margin: 0 0.5rem;
-    color: #aaa;
-}
-
-/* Responsive Design */
-@media (max-width: 480px) {
-    .create-account-container {
-        padding: 1.5rem;
-    }
-
-    h1 {
-        font-size: 1.5rem;
-    }
+    text-decoration: underline;
 }

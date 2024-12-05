@@ -4,32 +4,6 @@ Ng Yong Kiat Shawn
 Created 28 Nov 2024
 -->
 
-<?php
-session_start();
-//require 'config/database.php'; // Include database connection file
-
-// Check if the form is submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = htmlspecialchars(trim($_POST['email'])); // Sanitize input
-    $password = trim($_POST['password']);
-
-    // Prepare and execute query
-    $query = $pdo->prepare("SELECT * FROM users WHERE email = :email");
-    $query->execute(['email' => $username]);
-    $user = $query->fetch();
-
-    // Validate credentials
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['role'] = $user['role'];
-        header('Location: dashboard.php'); // Redirect to dashboard
-        exit;
-    } else {
-        $error = "Invalid username or password.";
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
