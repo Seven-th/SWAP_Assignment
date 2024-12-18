@@ -26,9 +26,6 @@
                 <a href="createAccount.php">Create Account</a>
             </div>
         </form>
-        <?php if (isset($_GET['error'])): ?>
-            <div class="error"><?= htmlspecialchars($_GET['error']) ?></div>
-        <?php endif; ?>
     </div>
 </body>
 </html>
