@@ -11,9 +11,6 @@
     <div class="login-container">
         <form method="POST" action="login.php" class="login-form">
             <h1>Login</h1>
-            <?php if (!empty($error)): ?>
-                <div class="error-message"><?= $error ?></div>
-            <?php endif; ?>
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="text" id="email" name="email" placeholder="Enter your email" required>
