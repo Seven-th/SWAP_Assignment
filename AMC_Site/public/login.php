@@ -1,43 +1,61 @@
-<!--
-Copyright Info
-Ng Yong Kiat Shawn
-Created 28 Nov 2024
--->
+<?php
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="../assets/styles/login.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
-</head>
-<body>
-    <div class="login-container">
-        <form method="POST" action="database_connection.php" class="login-form">
-            <h1>Login</h1>
-            <?php if (!empty($error)): ?>
-                <div class="error-message"><?= $error ?></div>
-            <?php endif; ?>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="text" id="email" name="email" placeholder="Enter your email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            </div>
-            <button type="submit" class="login-button">Login</button>
-            <div class="form-footer">
-                <a href="forgotPassword.php">Forgot Password?</a>
-                <span> | </span>
-                <a href="createAccount.php">Create Account</a>
-            </div>
-        </form>
-        <?php if (isset($_GET['error'])): ?>
-            <div class="error"><?= htmlspecialchars($_GET['error']) ?></div>
-        <?php endif; ?>
-    </div>
-</body>
-</html>
+session_start();
+
+$host = 'localhost';           
+$db = 'usermanagement';   
+$user = 'root';                
+$pass = '';
+$charset = 'utf8mb4';          
+
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset"; 
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, 
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,       
+    PDO::ATTR_EMULATE_PREPARES   => false,                  
+];
+
+try {
+    $pdo = new PDO($dsn, $user, $pass, $options);
+    // Connection successful
+    echo "Database connection successful!";
+} catch (PDOException $e) {
+    // Handle connection error
+    die("Database connection failed: " . $e->getMessage());
+}
+
+// Handle form submission of login page
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+
+    //check if inputs are empty
+    if (empty($email) || empty($password)) {
+        header("Location: http://localhost/SWAP_Assignment/AMC_Site/public/login.php=?error=Both fields are required");
+        exit;
+    }
+
+    // Fetches data from database
+    $smtm = $pdo->prepare("SELECT * FROM researcher WHERE email = :email");
+    $smtm->execute(['email' => $email]);
+    $user = $smtm->fetch();
+
+    //verifying password
+    if ($user && password_verify($password, $user['password'])) {
+        // password is correct, start a session
+        $_SESSION['user_id'] = $user['researcher_id'];
+        $_SESSION['email'] = $user['email'];
+        header("Location: http://localhost/SWAP_Assignment/AMC_Site/public/dashboard.php");
+        exit;
+    } else {
+        // Invalid credentials
+        header("Location: http://localhost/SWAP_Assignment/AMC_Site/public/dashboard.php");
+        exit;
+    }
+} else {
+    // Invalid request method
+    header("Location: http://localhost/SWAP_Assignment/AMC_Site/public/login.php");
+    exit;
+}
+?>
