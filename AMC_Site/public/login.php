@@ -15,7 +15,7 @@ Created 28 Nov 2024
 </head>
 <body>
     <div class="login-container">
-        <form method="POST" action="login.php" class="login-form">
+        <form method="POST" action="database_connection.php" class="login-form">
             <h1>Login</h1>
             <?php if (!empty($error)): ?>
                 <div class="error-message"><?= $error ?></div>
@@ -35,6 +35,9 @@ Created 28 Nov 2024
                 <a href="createAccount.php">Create Account</a>
             </div>
         </form>
+        <?php if (isset($_GET['error'])): ?>
+            <div class="error"><?= htmlspecialchars($_GET['error']) ?></div>
+        <?php endif; ?>
     </div>
 </body>
 </html>

@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // password is correct, start a session
         $_SESSION['user_id'] = $user['researcher_id'];
         $_SESSION['email'] = $user['email'];
-        header("Location: dashboard.php");
+        header("Location: http://localhost/SWAP_Assignment/AMC_Site/public/dashboard.php");
         exit;
     } else {
         // Invalid credentials
