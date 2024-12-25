@@ -10,10 +10,13 @@
 <body>
     <div class="login-container">
         <form method="POST" action="login.php" class="login-form">
+        <?php if (!empty($error)): ?>
+            <div class="error-message" style="color: red;"><?= htmlspecialchars($error); ?></div>
+        <?php endif; ?>
             <h1>Login</h1>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="text" id="email" name="email" placeholder="Enter your email" required>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>

@@ -6,7 +6,7 @@ USE UserManagement;
 
 -- Permission Table
 CREATE TABLE permission (
-    permission_id INT AUTO_INCREMENT PRIMARY KEY,
+    permission_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL ON DELETE CASCADE ON UPDATE CASCADE,
     role ENUM('Admin', 'Researcher', 'Research Assistant') NOT NULL,
     permission VARCHAR(255) NOT NULL
 );
@@ -19,7 +19,7 @@ CREATE TABLE department (
 
 -- Researcher Table
 CREATE TABLE researcher (
-    researcher_id INT AUTO_INCREMENT PRIMARY KEY,    
+    researcher_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL ON DELETE CASCADE ON UPDATE CASCADE,    
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,       
     country_code VARCHAR(5) DEFAULT '+65' NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE researcher (
 
 -- Equipment Inventory Table
 CREATE TABLE equipment_inventory (
-    equipment_id INT AUTO_INCREMENT PRIMARY KEY,
+    equipment_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL ON DELETE CASCADE ON UPDATE CASCADE,
     product_name VARCHAR(255) NOT NULL,
     quantity INT NOT NULL, 
     restock_level INT NOT NULL 
@@ -41,7 +41,7 @@ CREATE TABLE equipment_inventory (
 
 -- Project Table
 CREATE TABLE project (
-    project_id INT AUTO_INCREMENT PRIMARY KEY,
+    project_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL ON DELETE CASCADE ON UPDATE CASCADE,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     funding DECIMAL(10, 2),
@@ -60,14 +60,14 @@ CREATE TABLE project (
 
 -- Password Reset Request Table
 CREATE TABLE password_reset_request (
-    request_id INT AUTO_INCREMENT PRIMARY KEY,
+    request_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL ON DELETE CASCADE ON UPDATE CASCADE,
     researcher_id INT NOT NULL,
     FOREIGN KEY (researcher_id) REFERENCES researcher(researcher_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Project Activity Log Table
 CREATE TABLE project_activity_log (
-    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    log_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL ON DELETE CASCADE ON UPDATE CASCADE,
     project_id INT NOT NULL,
     project_status ENUM('Ongoing', 'Completed') NOT NULL DEFAULT 'Ongoing',
     last_updated_by INT NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE project_activity_log (
 
 -- Audit Logs Table
 CREATE TABLE audit_logs ( 
-    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    log_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL ON DELETE CASCADE ON UPDATE CASCADE,
     researcher_id INT NOT NULL,
     audit_action TEXT NOT NULL,
     audit_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE audit_logs (
 
 -- Equipment Usage Log Table
 CREATE TABLE equipment_usage_log (
-    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    log_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL ON DELETE CASCADE ON UPDATE CASCADE,
     equipment_id INT NOT NULL,
     last_used_by INT NOT NULL,
     department_id INT NOT NULL,
