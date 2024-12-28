@@ -7,7 +7,7 @@ $table = 'researcher';
 
 try {
     // Fetch all data from the table
-    $stmt = $pdo->prepare("SELECT * FROM $table WHERE password = 'password'");
+    $stmt = $pdo->prepare("SELECT * FROM $table WHERE email = 'john@gmail.com'");
     $stmt->execute();
     $results = $stmt->fetchAll();
 
