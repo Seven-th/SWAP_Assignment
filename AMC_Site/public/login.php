@@ -22,21 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $pdo->prepare("SELECT * FROM researcher WHERE email = :email");
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch();
-    $x = $user['password'];
-    echo "$x";
 
-    // if ($password == $x) {
-    //     echo "Successful!";
-    //     $_SESSION['user_id'] = $user['researcher_id'];
-    //     header("Location: dashboard.php");
-    //     exit;
-    // }
-    // else {
-    //     echo 'nigger';
-    // }
 
     //verifying password
-    if ($user && $x == $user['password']) {
+    if ($user && $password == $user['password']) {
         // password is correct, start a session
         $_SESSION['user_id'] = $user['researcher_id'];
         header("Location: dashboard.php");
