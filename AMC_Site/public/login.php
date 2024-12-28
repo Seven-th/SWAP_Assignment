@@ -6,12 +6,9 @@ require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php
 $error = "";
 
 // Handle form submission of login page
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
-    //echo "$email";
-    //echo "$password";
 
     //check if inputs are empty
     if (empty($email) || empty($password)) {
