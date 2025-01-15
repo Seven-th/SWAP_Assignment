@@ -25,6 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user && $password == $user['password']) {
         // password is correct, start a session
         $_SESSION['user_id'] = $user['researcher_id'];
+        $_SESSION['role'] = $user['department_id'];
+        $_SESSION['name'] = $user['name'];
         header("Location: dashboard.php");
         exit;
     } else {
