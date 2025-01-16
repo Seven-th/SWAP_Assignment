@@ -4,6 +4,9 @@ CREATE DATABASE UserManagement;
 -- Use the newly created database
 USE UserManagement;
 
+
+
+
 -- Permission Table
 CREATE TABLE permission (
     permission_id INT AUTO_INCREMENT PRIMARY KEY NOT,
