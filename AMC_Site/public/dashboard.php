@@ -57,7 +57,10 @@ try {
     </header>
 
     <div>
+        <br>
         <a href="create_account.php">Create New Account</a>
+        <br>
+        <a href="inventory.php">Inventory Page</a>
     </div>
     
 </body>
