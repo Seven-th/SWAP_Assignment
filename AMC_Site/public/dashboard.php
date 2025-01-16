@@ -10,8 +10,10 @@ if (!isset($_SESSION['user_id'])) {
 
 
 
-$role= $_SESSION['role'];
-$name = $_SESSION['name'];
+
+
+// $role= $_SESSION['role'];
+// $name = $_SESSION['name'];
 ?>
 
 <!DOCTYPE html>
