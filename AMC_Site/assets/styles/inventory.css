@@ -1,77 +1,135 @@
+/* CSS Variables for Easy Theming */
+:root {
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --background-color: #f4f4f9;
+    --container-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #ddd;
+    --input-focus: rgba(0, 123, 255, 0.5);
+    --error-bg: #f8d7da;
+    --error-text: #721c24;
+    --error-border: #f5c6cb;
+    --footer-text: #555555;
+    --shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
+    --font-family: 'Product Sans', sans-serif;
+}
+
 /* General Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: var(--font-family);
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f5f5f5;
+    background-color: var(--background-color);
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
-    flex-direction: column;
+    align-items: flex-start;
+    min-height: 100vh;
+    color: var(--text-color);
+    padding: 20px;
+    overflow-x: hidden;
 }
 
+/* Container: Center the content but make it more flexible */
 .container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    justify-content: space-between; /* Align the forms side by side */
+    align-items: flex-start;
+    flex-direction: row; /* Forms side by side */
     width: 100%;
-    text-align: center;
+    max-width: 1200px; /* Max width to prevent excessive stretch */
+    margin: 0 auto;
+    text-align: left; /* Changed to left for better readability */
+    padding-top: 40px;
+    gap: 20px; /* Add space between sections */
+    flex-wrap: wrap; /* Allow wrapping when needed on smaller screens */
 }
 
 /* CRUD Box */
 .crud-box {
-    background-color: white;
+    background-color: var(--container-bg);
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    margin-bottom: 20px;
+    border-radius: 12px; /* Slightly reduced for a sleeker look */
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 380px; /* Limit width of each form */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Changed to stretch for better alignment */
+    transition: box-shadow var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+
+.crud-box:hover {
+    box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
 }
 
 /* Title */
 h2 {
-    font-weight: 500;
-    margin-bottom: 20px;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+    font-weight: 600; /* Increased for better hierarchy */
+    text-align: center; /* Centered for aesthetic balance */
 }
 
 /* Textbox Styles */
 .textbox {
     margin: 15px 0;
+    width: 100%;
 }
 
 .textbox input {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    color: var(--text-color);
+    transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.textbox input::placeholder {
+    color: #aaa;
 }
 
 .textbox input:focus {
+    border-color: var(--primary-color);
     outline: none;
-    border-color: #007bff;
+    box-shadow: 0 0 5px var(--input-focus);
 }
 
 /* Button Styles */
 .btn {
     width: 100%;
-    padding: 12px;
-    background-color: #007bff;
+    padding: 0.75rem;
+    background-color: var(--primary-color);
     border: none;
-    border-radius: 5px;
-    font-size: 18px;
-    color: white;
+    border-radius: 8px;
+    font-size: 1.1rem; /* Slightly reduced for better balance */
+    color: #ffffff;
     cursor: pointer;
+    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+    margin-top: 10px;
 }
 
 .btn:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
 }
 
 /* Table Styles */
@@ -80,32 +138,99 @@ h2 {
     margin-top: 20px;
     border-collapse: collapse;
     text-align: left;
+    background-color: var(--container-bg);
+    border-radius: 8px;
+    overflow: hidden; /* To apply border-radius to table */
+    box-shadow: var(--shadow);
+    transition: box-shadow var(--transition-speed) ease;
+}
+
+.equipment-table:hover {
+    box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.15);
 }
 
 .equipment-table th, .equipment-table td {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee; /* Softer border color */
 }
 
 .equipment-table th {
-    background-color: #f2f2f2;
+    background-color: #f9f9f9; /* Slightly lighter for better contrast */
+    font-weight: 600;
 }
 
 .equipment-table tr:hover {
-    background-color: #f9f9f9;
+    background-color: #f1f1f1;
 }
 
-/* Links */
-a {
-    text-decoration: none;
-    color: #007bff;
+.equipment-table tr:last-child td {
+    border-bottom: none;
 }
 
-a:hover {
-    text-decoration: underline;
+/* Error message (if any) */
+.error-message {
+    background-color: var(--error-bg);
+    color: var(--error-text);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--error-border);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    text-align: left; /* Changed to left for better readability */
 }
 
-/* Footer Links (forgot password & create account) */
+/* Footer Links */
 .footer-links {
     margin-top: 10px;
+    font-size: 0.9rem;
+    color: var(--footer-text);
+    text-align: center; /* Centered for better aesthetics */
+}
+
+.footer-links a {
+    color: var(--primary-color);
+    text-decoration: none;
+    margin: 0 5px;
+    transition: color var(--transition-speed) ease;
+}
+
+.footer-links a:hover {
+    color: var(--primary-hover);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack forms vertically on smaller screens */
+        padding: 15px;
+    }
+
+    .crud-box {
+        max-width: 100%; /* Allow full width on smaller screens */
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    .btn {
+        font-size: 1rem;
+        padding: 0.7rem;
+    }
+
+    .equipment-table th, .equipment-table td {
+        padding: 10px 12px;
+    }
+}
+
+/* Larger screens: adjust the layout to use more space */
+@media (min-width: 1200px) {
+    .container {
+        padding: 20px;
+    }
+
+    .crud-box {
+        max-width: 380px; /* Keep it consistent on large screens */
+    }
 }
