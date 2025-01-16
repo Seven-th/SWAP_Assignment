@@ -8,10 +8,34 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+$user_id = $_SESSION['user_id'];
 
+try {
+    $stmt = $pdo->prepare("
+    SELECT researcher.researcher_id, researcher.email, department.name AS department_name, permission.role AS permission_name
+    FROM researcher
+    JOIN department ON researcher.department_id = department.department_id
+    JOIN permission ON researcher.permission_id = permission.permission_id
+    WHERE researcher.researcher_id = :user_id
+    ");
+    $stmt->execute(['user_id' => $user_id]);
+    $user = $stmt->fetch();
 
-$role= $_SESSION['role'];
-$name = $_SESSION['name'];
+    if (!$user) {
+        echo "$user";
+        echo "User not found";
+        exit;
+    }
+
+    $name = $user['email'];
+    $department= $user['department_name'];
+    $permission = $user['permission_name'];
+
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+    exit;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -19,12 +43,21 @@ $name = $_SESSION['name'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
     <link rel="stylesheet" href="../assets/styles/login.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
+    <title>Dashboard</title>
 </head>
 
 <body>
-    <div class="section">
-        <p>Your role: <strong><?=$role?></strong></p>
+    <header class="Header">
+        <nav class="nav container">
+            Department: <strong><?=htmlspecialchars($department);?></strong><br>
+            Role: <strong><?=htmlspecialchars($permission);?></strong>
+        </nav>
+    </header>
+
+    <div>
+        <a href="create_account.php">Create New Account</a>
     </div>
+    
+</body>
