@@ -31,7 +31,16 @@
                     <label for="email">Enter your email address</label>
                     <input type="email" id="email" name="email" placeholder="Enter your email" required>
                 </div>
-                
+                <!-- Phone Number input -->
+                <div class="form-group">
+                    <label for="email">Enter your Phone Number</label>
+                    <input type="number" id="number" name="number" placeholder="Enter your Phone Number" required>
+                </div>
+                <!-- Department input -->
+                <div class="form-group">
+                    <label for="department">Enter your Department</label>
+                    <input type="text" id="department" name="department" placeholder="Enter your Department" required>
+                </div>
                 <!-- Password input -->
                 <div class="form-group">
                     <label for="password">Choose a Password</label>
