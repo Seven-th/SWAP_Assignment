@@ -9,7 +9,7 @@ USE UserManagement;
 
 -- Permission Table
 CREATE TABLE permission (
-    permission_id INT AUTO_INCREMENT PRIMARY KEY NOT,
+    permission_id INT AUTO_INCREMENT PRIMARY KEY,
     role ENUM('Admin', 'Researcher', 'Research Assistant') NOT NULL,
     permission VARCHAR(255) NOT NULL
 );
@@ -22,7 +22,7 @@ CREATE TABLE department (
 
 -- Researcher Table
 CREATE TABLE researcher (
-    researcher_id INT AUTO_INCREMENT PRIMARY KEY NOT,
+    researcher_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,       
     country_code VARCHAR(5) DEFAULT '+65' NOT NULL,
