@@ -54,7 +54,8 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Management</title>
-    <link rel="stylesheet" href="C:\xampp\htdocs\SWAP_Assignment\AMC_Site\assets\styles\inventory.css"> <!-- Ensure this path is correct -->
+    <link rel="stylesheet" href="../assets/styles/inventory.css"> <!-- Ensure this path is correct -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
 </head>
 <body>
     <div class="container">
