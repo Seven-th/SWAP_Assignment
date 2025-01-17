@@ -58,7 +58,7 @@ try {
 
     <div>
         <br>
-        <a href="create_account.php">Create New Account</a>
+        <a href="create_account_form.php">Create New Account</a>
         <br>
         <a href="inventory.php">Inventory Page</a>
     </div>

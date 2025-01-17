@@ -25,8 +25,6 @@
             <button type="submit" class="login-button">Login</button>
             <div class="form-footer">
                 <a href="forgotPassword.php">Forgot Password?</a>
-                <span> | </span>
-                <a href="createAccount.php">Create Account</a>
             </div>
         </form>
     </div>

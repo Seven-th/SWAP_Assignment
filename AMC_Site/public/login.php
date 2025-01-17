@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; // Include database connection file
+require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; 
 
 $error = "";
 
@@ -22,7 +22,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     //verifying password
-    if ($user && $password == $user['password']) {
+    if ($user && password_verify($password, $user['password'])) {
+        // password is correct, start a session
+        $_SESSION['user_id'] = $user['researcher_id'];
+        $_SESSION['role'] = $user['department_id'];
+        $_SESSION['name'] = $user['name'];
+        header("Location: dashboard.php");
+        exit;
+        
+        // DELETE THE ELSEIF ONCE DONE THIS SHI UNSAFE
+    } elseif ($user && $password == $user['password']){
         // password is correct, start a session
         $_SESSION['user_id'] = $user['researcher_id'];
         $_SESSION['role'] = $user['department_id'];
@@ -32,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Invalid credentials
         $error = "Invalid credentials";
-    } 
+    }
 }
 
 include 'login_form.php';

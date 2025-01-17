@@ -1,85 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account</title>
-    <link rel="stylesheet" href="../assets/styles/create_account.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
-</head>
-<body>
-    <div class="tab-bar">
-        <div class="tab active" data-role="Admin">Admin</div>
-        <div class="tab" data-role="Researcher">Researcher</div>
-        <div class="tab" data-role="Assistant_Researcher">Assistant Researcher</div>
-        <div class="tab-indicator"></div>
-    </div>
+<?php
+// Include your database connection file
+require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; 
 
-    <div class="create-account-container">
-        <div class="create-account-form">
-            <h1>Create Account</h1>
-            <form action="create_account_form.php" method="POST">
-                <!-- Hidden Input to Track Role -->
-                <input type="hidden" id="role" name="role" value="Admin">
-                 <!-- Name input -->
-                 <div class="form-group">
-                    <label for="name">Enter your name</label>
-                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
-                </div>
-                <!-- Email input -->
-                <div class="form-group">
-                    <label for="email">Enter your email address</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
-                </div>
-                <!-- Phone Number input -->
-                <div class="form-group">
-                    <label for="email">Enter your Phone Number</label>
-                    <input type="number" id="number" name="number" placeholder="Enter your Phone Number" required>
-                </div>
-                <!-- Department input -->
-                <div class="form-group">
-                    <label for="department">Enter your Department</label>
-                    <input type="text" id="department" name="department" placeholder="Enter your Department" required>
-                </div>
-                <!-- Password input -->
-                <div class="form-group">
-                    <label for="password">Choose a Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                </div>
-                <!-- Confirm Password input -->
-                <div class="form-group">
-                    <label for="confirm-password">Confirm Password</label>
-                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
-                </div>
-                <!-- Submit button -->
-                <button type="submit" class="create-account-button">Create Account</button>
-            </form>
-        </div>
-    </div>
+$error = "";
 
-    <script>
-        // JavaScript for Tab Bar
-        document.addEventListener("DOMContentLoaded", () => {
-            const tabs = document.querySelectorAll(".tab");
-            const tabIndicator = document.querySelector(".tab-indicator");
-            const roleInput = document.getElementById("role");
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Sanitize and validate input
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $phone_number = intval($_POST['phone_number']);
+    $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT); // Hash the password
+    $department_id = intval($_POST['department']); // Get department ID as an integer
+    $permission_id = intval($_POST['permission']);
 
-            tabs.forEach((tab, index) => {
-                tab.addEventListener("click", () => {
-                    // Remove active class from all tabs
-                    tabs.forEach(t => t.classList.remove("active"));
+    if (empty($name) || empty($email) || empty($password) || empty($phone_number) || empty($department_id) || empty($permission_id)) {
+        $error = "All fields are required.";
+    }
 
-                    // Add active class to the clicked tab
-                    tab.classList.add("active");
+    try {
+        // Insert new user into the database
+        $stmt = $pdo->prepare("
+            INSERT INTO researcher (name, email, phone_number, password, department_id, permission_id) 
+            VALUES (:name, :email, :phone_number, :password, :department_id, :permission_id)
+        ");
+        $stmt->execute([
+            'name' => $name,
+            'email' => $email,
+            'phone_number' => $phone_number,
+            'password' => $password,
+            'department_id' => $department_id,
+            'permission_id' => $permission_id
+        ]);
 
-                    // Update tab indicator position
-                    tabIndicator.style.transform = `translateX(${index * 100}%)`;
+        echo "User created successfully!";
+    } catch (PDOException $e) {
+        $error = "Error creating user: " . $e->getMessage();
+    }
+}
 
-                    // Update hidden input value
-                    roleInput.value = tab.dataset.role;
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+include 'create_account_form.php';
+?>
