@@ -52,7 +52,6 @@ CREATE TABLE project (
     generated_by INT NOT NULL,
     assigned_to INT NOT NULL,
     department_id INT NOT NULL,
-    team_members TEXT, 
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (generated_by) REFERENCES researcher(researcher_id) ON DELETE CASCADE ON UPDATE CASCADE,

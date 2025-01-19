@@ -42,8 +42,19 @@ body {
 }
 
 .menu a.active, .menu a:hover {
-    background-color: #e91e63;
+    background-color: #0056b3;
     color: #fff;
+}
+
+.main-content {
+    display: flex;
+    align-self: left;
+    align-items: centre;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    margin-bottom: 10px;
+    border-radius: 5px;
 }
 
 h1 {
@@ -51,4 +62,15 @@ h1 {
     margin-bottom: 1rem;
     text-align: center;
     color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 1.5rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
 }
