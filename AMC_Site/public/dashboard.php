@@ -68,7 +68,7 @@ try {
                 <!-- To add or not to add. That is the question.-->
                 <!-- <a href="profile.php"><i class="icon">👤</i> Profile</a> -->
                 <a href="user_management.php"><i class="icon">👤</i> User Management</a>
-                <a href="equipment.php"><i class="icon">📦</i> Equipment</a>
+                <a href="inventory.php"><i class="icon">📦</i> Equipment</a>
                 <a href="reports.php"><i class="icon">📄</i> Reports</a>
                 <a href="logout.php"><i class="icon">🚪</i> Logout</a>
             </nav>
