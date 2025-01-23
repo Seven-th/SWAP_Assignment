@@ -5,68 +5,118 @@ CREATE DATABASE UserManagement;
 USE UserManagement;
 
 
-CREATE TABLE department (
-    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    head_user_id INT NOT NULl FOREIGN KEY REFERENCES users(id)
-)
 
-CREATE TABLE researchers (
-    researcher_id INT AUTO_INCREMENT PRIMARY KEY,    
+
+-- Permission Table
+CREATE TABLE permission (
+    permission_id INT AUTO_INCREMENT PRIMARY KEY,
+    role ENUM('Admin', 'Researcher', 'Research Assistant') NOT NULL,
+    permission VARCHAR(255) NOT NULL
+);
+
+-- Department Table
+CREATE TABLE department (
+    department_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+-- Researcher Table
+CREATE TABLE researcher (
+    researcher_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,       
-    country_code VARCHAR(5) DEFAULT '+65' NOT NULL,
     phone_number VARCHAR(15) NOT NULL,
-    --> if can have like a dropdown list of all country codes for user to choose from 
-    --> to implement in the html, can try useing Int-Tel-input library idk how it works tho so ,')
-    --> else, keep to original  " phone_number VARCHAR(20) NOT NULL "
     password VARCHAR(255) NOT NULL,           
-    role ENUM('Admin', 'Researcher', 'Assistant_Researcher') DEFAULT 'Assistant_Researcher' NOT NULL,
-    department_id INT NULL FOREIGN KEY REFERENCES department(id)
-)
+    permission_id INT NOT NULL, 
+    department_id INT NOT NULL, 
+    FOREIGN KEY (permission_id) REFERENCES permission(permission_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
+-- Equipment Inventory Table
 CREATE TABLE equipment_inventory (
-    equipment_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    equipment_id INT AUTO_INCREMENT PRIMARY KEY,
     product_name VARCHAR(255) NOT NULL,
-    sku VARCHAR(50) NOT NULL, --> what dis?
-    quantity INT NOT NULL, --> current stock level
-    restock_level INT NOT NULL --> Min merch for said product
-)
+    quantity INT NOT NULL, 
+    restock_level INT NOT NULL 
+);
 
-CREATE TABLE equipment_usage_log (
-    log_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    equipment_id INT NOT NULL FOREIGN KEY REFERENCES equipment_inventory(equipment_id),
-    last_used_by INT NOT NULL FOREIGN KEY REFERENCES researchers(id),
-    department_id INT NOT NULL FOREIGN KEY REFERENCES department(id),
-    quantity INT NOT NULL, --> How much of this equipment did the researcher take
-)
-
-CREATE TABLE project ( --> used to be reports
-    project_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+-- Project Table
+CREATE TABLE project (
+    project_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    funding DECIMAL(10, 2),
+    status ENUM('Ongoing', 'Completed') DEFAULT 'Ongoing',
     project_priority_level ENUM('Low', 'Medium', 'High') NOT NULL,
-    generated_by INT NOT NULL FOREIGN KEY REFERENCES researchers(id),
-    assigned_to INT NOT NULL FOREIGN KEY REFERENCES researchers(id),
-    department_id INT NOT NULL FOREIGN KEY REFERENCES department(id),
-    data_points TEXT NOT NULL, --> like assignment specs for the project
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
-)
+    generated_by INT NOT NULL,
+    assigned_to INT NOT NULL,
+    department_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (generated_by) REFERENCES researcher(researcher_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (assigned_to) REFERENCES researcher(researcher_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
+-- Password Reset Request Table
+CREATE TABLE password_reset_request (
+    request_id INT AUTO_INCREMENT PRIMARY KEY,
+    researcher_id INT NOT NULL,
+    FOREIGN KEY (researcher_id) REFERENCES researcher(researcher_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Project Activity Log Table
 CREATE TABLE project_activity_log (
-    log_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    project_id INT NOT NULL FOREIGN KEY REFERENCES project(project_id),
-    project_status ENUM('Initialized', 'Ongoing', 'Completed') NOT NULL,
-    last_updated_by INT NOT NULL FOREIGN KEY REFERENCES researchers(id),
-    department_id INT NOT NULL FOREIGN KEY REFERENCES department(id),
-    data_points TEXT NOT NULL, --> will display current progress of the project
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL --> last edited time lah or smth like that
-)
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    project_id INT NOT NULL,
+    project_status ENUM('Ongoing', 'Completed') NOT NULL DEFAULT 'Ongoing',
+    last_updated_by INT NOT NULL,
+    department_id INT NOT NULL,
+    data_points TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, 
+    FOREIGN KEY (project_id) REFERENCES project(project_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (last_updated_by) REFERENCES researcher(researcher_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
---> all in one audit log? like for login attempts/new users/project creation deletion etc...?
+-- Audit Logs Table
 CREATE TABLE audit_logs ( 
-    log_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    researcher_id INT NOT NULL FOREIGN KEY REFERENCES researchers(id),
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    researcher_id INT NOT NULL,
     audit_action TEXT NOT NULL,
     audit_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    details TEXT NOT NULL
-)
+    details TEXT NOT NULL,
+    FOREIGN KEY (researcher_id) REFERENCES researcher(researcher_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Equipment Usage Log Table
+CREATE TABLE equipment_usage_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    equipment_id INT NOT NULL,
+    last_used_by INT NOT NULL,
+    department_id INT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (equipment_id) REFERENCES equipment_inventory(equipment_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (last_used_by) REFERENCES researcher(researcher_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- INSERT VALUES INTO TABLE
+-- FOR PERMISSIONS TABLE
+INSERT INTO permission (role, permission) VALUES ('Admin','Full access to all CRUD functions, including user management, project records, and equipment management.');
+INSERT INTO permission (role, permission) VALUES ('Researcher','Can create and manage their own research projects and equipment requests.');
+INSERT INTO permission (role, permission) VALUES ('Research Assistant','Can view assigned projects and update equipment usage.');
+
+-- FOR DEPARTMENT TABLE
+INSERT INTO department (name) VALUES ('Physics');
+INSERT INTO department (name) VALUES ('Chemistry');
+INSERT INTO department (name) VALUES ('Biology');
+
+-- FOR USERS TABLE i.e. CREATE users to test login / forgot pass functions
+INSERT INTO researcher (name, email, phone_number, password, permission_id, department_id) 
+VALUES ('john', 'john@gmail.com', '11112222', 'password', '1', '1');
+INSERT INTO researcher (name, email, phone_number, password, permission_id, department_id) 
+VALUES ('bob', 'bob@gmail.com', '33334444', 'password', '2', '2');
+INSERT INTO researcher (name, email, phone_number, password, permission_id, department_id) 
+VALUES ('Muthu', 'muthu@gmail.com', '55556666', 'password', '3', '3')

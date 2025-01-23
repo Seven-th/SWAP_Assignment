@@ -1,40 +1,48 @@
-<!--
-Copyright Info
-Ng Yong Kiat Shawn
-Created 28 Nov 2024
--->
+<?php
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="../assets/styles/login.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
-</head>
-<body>
-    <div class="login-container">
-        <form method="POST" action="login.php" class="login-form">
-            <h1>Login</h1>
-            <?php if (!empty($error)): ?>
-                <div class="error-message"><?= $error ?></div>
-            <?php endif; ?>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="text" id="email" name="email" placeholder="Enter your email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            </div>
-            <button type="submit" class="login-button">Login</button>
-            <div class="form-footer">
-                <a href="forgotPassword.php">Forgot Password?</a>
-                <span> | </span>
-                <a href="createAccount.php">Create Account</a>
-            </div>
-        </form>
-    </div>
-</body>
-</html>
+session_start();
+require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; 
+
+$error = "";
+
+// Handle form submission of login page
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+
+    //check if inputs are empty
+    if (empty($email) || empty($password)) {
+        $error = "Both fields are required!";
+    }
+
+    // Fetches data from database
+    $stmt = $pdo->prepare("SELECT * FROM researcher WHERE email = :email");
+    $stmt->execute(['email' => $email]);
+    $user = $stmt->fetch();
+
+
+    //verifying password
+    if ($user && password_verify($password, $user['password'])) {
+        // password is correct, start a session
+        $_SESSION['user_id'] = $user['researcher_id'];
+        $_SESSION['role'] = $user['department_id'];
+        $_SESSION['name'] = $user['name'];
+        header("Location: dashboard.php");
+        exit;
+        
+        // DELETE THE ELSEIF ONCE DONE THIS SHI UNSAFE
+    } elseif ($user && $password == $user['password']){
+        // password is correct, start a session
+        $_SESSION['user_id'] = $user['researcher_id'];
+        $_SESSION['role'] = $user['department_id'];
+        $_SESSION['name'] = $user['name'];
+        header("Location: dashboard.php");
+        exit;
+    } else {
+        // Invalid credentials
+        $error = "Invalid credentials";
+    }
+}
+
+include 'login_form.php';
+?>
