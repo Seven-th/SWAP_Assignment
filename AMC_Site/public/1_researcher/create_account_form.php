@@ -3,7 +3,7 @@ session_start();
 require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; // Include database connection file
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login_form.php");
+    header("Location: ..\login_form.php");
     exit;
 }
 
@@ -24,20 +24,21 @@ $error = ""
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account</title>
-    <link rel="stylesheet" href="..\assets\styles\user_profile.css">
+    <link rel="stylesheet" href="\SWAP_Assignment\AMC_Site\assets\styles\user_profile.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
 </head>
 <body>
-    <div class="tab-bar">
-        <div class="tab active" data-permission="1">Admin</div>
-        <div class="tab" data-permission="2">Researcher</div>
-        <div class="tab" data-permission="3">Assistant Researcher</div>
-        <div class="tab-indicator"></div>
-    </div>
-
     <div class="create-account-container">
+        <a href="..\dashboard.php" class="active"><i class="icon">🏠</i> Dashboard</a>
+        <h1>Create Account</h1>
+        <div class="tab-bar">
+            <div class="tab active" data-permission="1">Admin</div>
+            <div class="tab" data-permission="2">Researcher</div>
+            <div class="tab" data-permission="3">Assistant Researcher</div>
+            <div class="tab-indicator"></div>
+        </div>
+
         <div class="create-account-form">
-            <h1>Create Account</h1>
             <?php if (!empty($error)): ?>
                 <div class="error-message" style="color: red;"><?= htmlspecialchars($error); ?></div>
             <?php endif; ?>
@@ -47,8 +48,8 @@ $error = ""
                 <noscript>
                     <input type="hidden" name="permission" value="3" />
                 </noscript>
-                 <!-- Name input -->
-                 <div class="form-group">
+                    <!-- Name input -->
+                    <div class="form-group">
                     <label for="name">Enter your name</label>
                     <input type="text" id="name" name="name" placeholder="Enter your name" required>
                 </div>

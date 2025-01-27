@@ -65,9 +65,7 @@ try {
             </div>    
             <nav class="menu">
                 <a href="dashboard.php" class="active"><i class="icon">🏠</i> Dashboard</a>
-                <!-- To add or not to add. That is the question.-->
-                <!-- <a href="profile.php"><i class="icon">👤</i> Profile</a> -->
-                <a href="user_management.php"><i class="icon">👤</i> User Management</a>
+                <a href="..\public\1_researcher\create_account_form.php"><i class="icon">👤</i> User Management</a>
                 <a href="inventory.php"><i class="icon">📦</i> Equipment</a>
                 <a href="reports.php"><i class="icon">📄</i> Reports</a>
                 <a href="logout.php"><i class="icon">🚪</i> Logout</a>
