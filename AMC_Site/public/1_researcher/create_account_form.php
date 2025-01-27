@@ -24,7 +24,7 @@ $error = ""
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account</title>
-    <link rel="stylesheet" href="..\assets\styles\create_account.css">
+    <link rel="stylesheet" href="..\assets\styles\user_profile.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
 </head>
 <body>
