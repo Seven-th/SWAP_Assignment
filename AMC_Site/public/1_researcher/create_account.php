@@ -4,6 +4,7 @@ require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php
 
 $error = "";
 
+// CREATE operation
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Sanitize and validate input
     $name = trim($_POST['name']);
@@ -37,6 +38,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Error creating user: " . $e->getMessage();
     }
 }
+
+// DELETE operation
+if (isset($_GET['id'])) {
+    $researcher_id = intval($_GET['id']);
+
+    try {
+        // Delete researcher from database
+        $stmt = $pdo->prepare("DELETE FROM researcher WHERE researcher_id = :id");
+        $stmt->execute(['id' => $researcher_id]);
+
+        // Redirect back to researcher list after deletion
+        header("Location: create_account_form.php?msg=Researcher deleted successfully");
+        exit;
+    } catch (PDOException $e) {
+        die("Error deleting researcher: " . $e->getMessage());
+    }
+} else {
+    // If no ID provided, redirect back
+    header("Location: create_account_form.php?error=Invalid request");
+    exit;
+}
+?>
+
 
 include 'create_account_form.php';
 ?>

@@ -8,14 +8,30 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 try {
+    // Fetch all department ids such that it can be selected and inputted properly
     $stmt = $pdo->prepare("SELECT department_id, name FROM department");
     $stmt->execute();
     $departments = $stmt->fetchAll();
 } catch (PDOException $e) {
     die("Error fetching departments: " . $e->getMessage());
 }
-$error = ""
-;
+$error = "";
+
+try {
+    // Fetch researcher data along with role and department names using JOINs
+    $stmt = $pdo->prepare("
+        SELECT researcher.researcher_id, researcher.name, researcher.email, researcher.phone_number, 
+               permission.role AS role_name, department.name AS department_name
+        FROM researcher
+        JOIN permission ON researcher.permission_id = permission.permission_id
+        JOIN department ON researcher.department_id = department.department_id
+    ");
+    $stmt->execute();
+    $researchers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Error fetching researcher profiles: " . $e->getMessage());
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -92,6 +108,55 @@ $error = ""
         </div>
     </div>
 
+    <div class="user_profiles_container"> 
+        <header class="profile_header">
+            <strong>User Profiles</strong>
+        </header>
+
+        <section class="user_profiles">
+            <table>
+                <thead>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Password</th>
+                    <th>Role</th>
+                    <th>Department</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php if (!empty($researchers)): ?>
+                    <?php foreach ($researchers as $researcher): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($researcher['researcher_id']) ?></td>
+                            <td><?= htmlspecialchars($researcher['name']) ?></td>
+                            <td><?= htmlspecialchars($researcher['email']) ?></td>
+                            <td><?= htmlspecialchars($researcher['phone_number']) ?></td>
+                            <td><strong>********</strong></td>
+                            <td><?= htmlspecialchars($researcher['role_name']) ?></td>
+                            <td><?= htmlspecialchars($researcher['department_name']) ?></td>
+                            <td class="action_buttons">
+                            <!-- Update Button -->
+                            <a href="profile.php?id=<?= $researcher['researcher_id'] ?>" class="update_button">Update</a>
+                            
+                            <!-- Delete Button -->
+                            <button class="delete_button" onclick="confirmDelete(<?= $researcher['researcher_id'] ?>)">Delete</button>
+                        </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6" style="text-align: center;">No researchers found</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </section>
+
+    </div>
+
+
     <script>
         // JavaScript for Tab Bar
         document.addEventListener("DOMContentLoaded", () => {
@@ -128,6 +193,15 @@ $error = ""
                 alert("Passwords do not match. Please try again.");
             }
         });
+    </script>
+
+    <script>
+        // JAvaScript to ensure no accidental deletion
+        function confirmDelete(researcherId) {
+            if (confirm("Are you sure you want to delete this researcher?")) {
+                window.location.href = "create_account.php?id=" + researcherId;
+            }
+        }
     </script>
 </body>
 </html>
