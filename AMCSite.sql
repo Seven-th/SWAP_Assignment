@@ -1,6 +1,6 @@
 -- Create the database
-CREATE DATABASE UserManagement;
-USE UserManagement;
+CREATE DATABASE AMCSite;
+USE AMCSite;
 
 -- User Table (Group and Part 1)
 CREATE TABLE user (
