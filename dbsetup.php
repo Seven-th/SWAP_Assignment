@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root"; // or your database username
 $password = ""; // or your database password
-$dbname = "UserManagement";
+$dbname = "AMCSite";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password);
@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 }
 
 // Create database
-$sql = "CREATE DATABASE IF NOT EXISTS UserManagement";
+$sql = "CREATE DATABASE IF NOT EXISTS AMCSite";
 if ($conn->query($sql) === TRUE) {
     echo "Database created successfully\n";
 } else {
