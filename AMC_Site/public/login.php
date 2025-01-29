@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Fetches data from database
-    $stmt = $pdo->prepare("SELECT * FROM researcher WHERE email = :email");
+    $stmt = $pdo->prepare("SELECT * FROM user WHERE email = :email");
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch();
 
@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //verifying password
     if ($user && password_verify($password, $user['password'])) {
         // password is correct, start a session
-        $_SESSION['user_id'] = $user['researcher_id'];
-        $_SESSION['role'] = $user['department_id'];
+        $_SESSION['user_id'] = $user['user_id'];
+        $_SESSION['role'] = $user['role'];
         $_SESSION['name'] = $user['name'];
         header("Location: dashboard.php");
         exit;
@@ -33,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // DELETE THE ELSEIF ONCE DONE THIS SHI UNSAFE
     } elseif ($user && $password == $user['password']){
         // password is correct, start a session
-        $_SESSION['user_id'] = $user['researcher_id'];
-        $_SESSION['role'] = $user['department_id'];
+        $_SESSION['user_id'] = $user['user_id'];
+        $_SESSION['role'] = $user['role'];
         $_SESSION['name'] = $user['name'];
         header("Location: dashboard.php");
         exit;

@@ -21,16 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Insert new user into the database
         $stmt = $pdo->prepare("
-            INSERT INTO researcher (name, email, phone_number, password, department_id, permission_id) 
-            VALUES (:name, :email, :phone_number, :password, :department_id, :permission_id)
+            INSERT INTO user (name, email, phone_number, password, role) 
+            VALUES (:name, :email, :phone_number, :password, :role)
         ");
         $stmt->execute([
             'name' => $name,
             'email' => $email,
             'phone_number' => $phone_number,
             'password' => $password,
-            'department_id' => $department_id,
-            'permission_id' => $permission_id
+            'role' => $role
         ]);
 
         echo "User created successfully!";
@@ -41,12 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // DELETE operation
 if (isset($_GET['id'])) {
-    $researcher_id = intval($_GET['id']);
+    $user_id = intval($_GET['id']);
 
     try {
         // Delete researcher from database
-        $stmt = $pdo->prepare("DELETE FROM researcher WHERE researcher_id = :id");
-        $stmt->execute(['id' => $researcher_id]);
+        $stmt = $pdo->prepare("DELETE FROM user WHERE user_id = :id");
+        $stmt->execute(['id' => $user_id]);
 
         // Redirect back to researcher list after deletion
         header("Location: create_account_form.php?msg=Researcher deleted successfully");
@@ -59,8 +58,6 @@ if (isset($_GET['id'])) {
     header("Location: create_account_form.php?error=Invalid request");
     exit;
 }
-?>
-
 
 include 'create_account_form.php';
 ?>

@@ -8,26 +8,10 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 try {
-    // Fetch all department ids such that it can be selected and inputted properly
-    $stmt = $pdo->prepare("SELECT department_id, name FROM department");
+    // Fetch all user data
+    $stmt = $pdo->prepare("SELECT * FROM user");
     $stmt->execute();
-    $departments = $stmt->fetchAll();
-} catch (PDOException $e) {
-    die("Error fetching departments: " . $e->getMessage());
-}
-$error = "";
-
-try {
-    // Fetch researcher data along with role and department names using JOINs
-    $stmt = $pdo->prepare("
-        SELECT researcher.researcher_id, researcher.name, researcher.email, researcher.phone_number, 
-               permission.role AS role_name, department.name AS department_name
-        FROM researcher
-        JOIN permission ON researcher.permission_id = permission.permission_id
-        JOIN department ON researcher.department_id = department.department_id
-    ");
-    $stmt->execute();
-    $researchers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Error fetching researcher profiles: " . $e->getMessage());
 }
@@ -80,18 +64,6 @@ try {
                     <input id="phone_number" type="tel" name="phone_number" placeholder="Enter your phone number" 
                         pattern="\+?[0-9]{10,15}" title="Please enter a valid phone number (with country code)" required />
                 </div>
-                <!-- Department input -->
-                <div class="form-group">
-                    <label for="department">Enter your Department</label>
-                    <select id="department" name="department" required>
-                        <option value="" disabled selected>Select your Department</option>
-                        <?php foreach ($departments as $department): ?>
-                            <option value="<?= $department['department_id'] ?>">
-                                <?= htmlspecialchars($department['name']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
                 <!-- Password input -->
                 <div class="form-group">
                     <label for="password">Choose a Password</label>
@@ -122,26 +94,24 @@ try {
                     <th>Phone Number</th>
                     <th>Password</th>
                     <th>Role</th>
-                    <th>Department</th>
                     </tr>
                 </thead>
                 <tbody>
-                <?php if (!empty($researchers)): ?>
-                    <?php foreach ($researchers as $researcher): ?>
+                <?php if (!empty($users)): ?>
+                    <?php foreach ($users as $user): ?>
                         <tr>
-                            <td><?= htmlspecialchars($researcher['researcher_id']) ?></td>
-                            <td><?= htmlspecialchars($researcher['name']) ?></td>
-                            <td><?= htmlspecialchars($researcher['email']) ?></td>
-                            <td><?= htmlspecialchars($researcher['phone_number']) ?></td>
+                            <td><?= htmlspecialchars($user['user_id']) ?></td>
+                            <td><?= htmlspecialchars($user['name']) ?></td>
+                            <td><?= htmlspecialchars($user['email']) ?></td>
+                            <td><?= htmlspecialchars($user['phone_number']) ?></td>
                             <td><strong>********</strong></td>
-                            <td><?= htmlspecialchars($researcher['role_name']) ?></td>
-                            <td><?= htmlspecialchars($researcher['department_name']) ?></td>
+                            <td><?= htmlspecialchars($user['role']) ?></td>
                             <td class="action_buttons">
                             <!-- Update Button -->
-                            <a href="profile.php?id=<?= $researcher['researcher_id'] ?>" class="update_button">Update</a>
+                            <a href="profile.php?id=<?= $user['user_id'] ?>" class="update_button">Update</a>
                             
                             <!-- Delete Button -->
-                            <button class="delete_button" onclick="confirmDelete(<?= $researcher['researcher_id'] ?>)">Delete</button>
+                            <button class="delete_button" onclick="confirmDelete(<?= $user['user_id'] ?>)">Delete</button>
                         </td>
                         </tr>
                     <?php endforeach; ?>
@@ -197,9 +167,9 @@ try {
 
     <script>
         // JAvaScript to ensure no accidental deletion
-        function confirmDelete(researcherId) {
+        function confirmDelete(user_id) {
             if (confirm("Are you sure you want to delete this researcher?")) {
-                window.location.href = "create_account.php?id=" + researcherId;
+                window.location.href = "create_account.php?id=" + user_id;
             }
         }
     </script>

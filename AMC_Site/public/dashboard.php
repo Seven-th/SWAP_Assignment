@@ -12,11 +12,9 @@ $user_id = $_SESSION['user_id'];
 
 try {
     $stmt = $pdo->prepare("
-    SELECT researcher.researcher_id, researcher.email, department.name AS department_name, permission.role AS permission_name
-    FROM researcher
-    JOIN department ON researcher.department_id = department.department_id
-    JOIN permission ON researcher.permission_id = permission.permission_id
-    WHERE researcher.researcher_id = :user_id
+    SELECT user.user_id, user.email, user.role
+    FROM user
+    WHERE user.user_id = :user_id
     ");
     $stmt->execute(['user_id' => $user_id]);
     $user = $stmt->fetch();
@@ -28,8 +26,7 @@ try {
     }
 
     $name = $user['email'];
-    $department= $user['department_name'];
-    $permission = $user['permission_name'];
+    $role = $user['role'];
 
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
@@ -77,8 +74,8 @@ try {
             <header>
                 <h1>Dashboard</h1>
                 <div class="profile">
-                    Department: <strong><?=htmlspecialchars($department);?></strong><br>
-                    Role: <strong><?=htmlspecialchars($permission);?></strong>
+                    Name: <strong><?=htmlspecialchars($name);?></strong><br>
+                    Role: <strong><?=htmlspecialchars($role);?></strong>
                 </div>
             </header>
 
