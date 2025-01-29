@@ -2,12 +2,6 @@
 CREATE DATABASE UserManagement;
 USE UserManagement;
 
--- Department Table
-CREATE TABLE department (
-    department_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
-);
-
 -- User Table (Group and Part 1)
 CREATE TABLE user (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -18,7 +12,7 @@ CREATE TABLE user (
     role ENUM('Admin', 'Researcher', 'Research Assistant') NOT NULL DEFAULT 'Research Assistant'
 );
 
--- Project Table (Part 2)
+-- Project Table
 CREATE TABLE project (
     project_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -27,20 +21,10 @@ CREATE TABLE project (
     status ENUM('Ongoing', 'Completed') DEFAULT 'Ongoing',
     project_priority_level ENUM('Low', 'Medium', 'High') NOT NULL,
     generated_by INT NOT NULL,
-    department_id INT NOT NULL,
+    assigned_to TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (generated_by) REFERENCES user(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
--- Project Assignment Table (Many-to-Many Relationship)
-CREATE TABLE project_assignment (
-    project_id INT NOT NULL,
-    user_id INT NOT NULL,
-    PRIMARY KEY (project_id, user_id),
-    FOREIGN KEY (project_id) REFERENCES project(project_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (generated_by) REFERENCES user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Equipment Inventory Table (Part 3)
