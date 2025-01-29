@@ -65,7 +65,7 @@ try {
                 <a href="..\public\1_researcher\create_account_form.php"><i class="icon">👤</i> User Management</a>
                 <a href="inventory.php"><i class="icon">📦</i> Equipment</a>
                 <a href="reports.php"><i class="icon">📄</i> Reports</a>
-                <a href="logout.php"><i class="icon">🚪</i> Logout</a>
+                <a href="logout.php" onclick="confirm_logout()"><i class="icon">🚪</i> Logout</a>
             </nav>
         </aside>
 
@@ -125,5 +125,17 @@ try {
         </main>
 
     </div>
+
+    <script>
+    // Confirm logout script
+    function confirm_logout() {
+        if (confirm("Are you sure you want to logout?")) {
+            fetch("logout.php")
+                .then(response => window.location.href = "login_form.php?msg=You have been logged out successfully")
+                .catch(error => console.error("Logout failed:", error));
+        }
+    }
+    </script>
     
 </body>
+</html>

@@ -32,9 +32,9 @@ try {
         <a href="..\dashboard.php" class="active"><i class="icon">🏠</i> Dashboard</a>
         <h1>Create Account</h1>
         <div class="tab-bar">
-            <div class="tab active" data-permission="1">Admin</div>
-            <div class="tab" data-permission="2">Researcher</div>
-            <div class="tab" data-permission="3">Assistant Researcher</div>
+            <div class="tab active" data-role="Admin">Admin</div>
+            <div class="tab" data-role="Researcher">Researcher</div>
+            <div class="tab" data-role="Assistant_Researcher">Assistant Researcher</div>
             <div class="tab-indicator"></div>
         </div>
 
@@ -43,10 +43,12 @@ try {
                 <div class="error-message" style="color: red;"><?= htmlspecialchars($error); ?></div>
             <?php endif; ?>
             <form action="create_account.php" method="POST">
+                <!-- Hidden input to help differentiate the INSERT POST and UPDATE POST -->
+                <input type="hidden" name="action" value="insert">
                 <!-- Hidden Input to Track permission -->
-                <input type="hidden" id="permission" name="permission" value="1" required>
+                <input type="hidden" id="role" name="role" value="1" required>
                 <noscript>
-                    <input type="hidden" name="permission" value="3" />
+                    <input type="hidden" name="role" value="3" />
                 </noscript>
                     <!-- Name input -->
                     <div class="form-group">
@@ -108,7 +110,7 @@ try {
                             <td><?= htmlspecialchars($user['role']) ?></td>
                             <td class="action_buttons">
                             <!-- Update Button -->
-                            <a href="profile.php?id=<?= $user['user_id'] ?>" class="update_button">Update</a>
+                            <a href="profile_form.php?id=<?= $user['user_id'] ?>" class="update_button">Update</a>
                             
                             <!-- Delete Button -->
                             <button class="delete_button" onclick="confirmDelete(<?= $user['user_id'] ?>)">Delete</button>
@@ -132,7 +134,7 @@ try {
         document.addEventListener("DOMContentLoaded", () => {
             const tabs = document.querySelectorAll(".tab");
             const tabIndicator = document.querySelector(".tab-indicator");
-            const permissionInput = document.getElementById("permission");
+            const roleInput = document.getElementById("role");
 
             tabs.forEach((tab, index) => {
                 tab.addEventListener("click", () => {
@@ -146,7 +148,7 @@ try {
                     tabIndicator.style.transform = `translateX(${index * 100}%)`;
 
                     // Update hidden input value
-                    permissionInput.value = tab.dataset.permission;
+                    roleInput.value = tab.dataset.role;
                 });
             });
         });

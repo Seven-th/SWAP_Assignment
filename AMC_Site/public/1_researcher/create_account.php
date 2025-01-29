@@ -11,10 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $phone_number = intval($_POST['phone_number']);
     $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT); // Hash the password
-    $department_id = intval($_POST['department']); // Get department ID as an integer
-    $permission_id = intval($_POST['permission']);
+    $role = $_POST['role'];
 
-    if (empty($name) || empty($email) || empty($password) || empty($phone_number) || empty($department_id) || empty($permission_id)) {
+    if (empty($name) || empty($email) || empty($password) || empty($phone_number) || empty($role)) {
         $error = "All fields are required.";
     }
 
@@ -24,16 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             INSERT INTO user (name, email, phone_number, password, role) 
             VALUES (:name, :email, :phone_number, :password, :role)
         ");
-        $stmt->execute([
-            'name' => $name,
-            'email' => $email,
-            'phone_number' => $phone_number,
-            'password' => $password,
-            'role' => $role
+                $stmt->execute([
+                    'name' => $name,
+                    'email' => $email,
+                    'phone_number' => $phone_number,
+                    'password' => $password,
+                    'role' => $role
         ]);
 
         echo "User created successfully!";
-    } catch (PDOException $e) {
+            } catch (PDOException $e) {
         $error = "Error creating user: " . $e->getMessage();
     }
 }
