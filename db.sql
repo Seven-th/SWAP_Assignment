@@ -12,7 +12,7 @@ CREATE TABLE user (
     role ENUM('Admin', 'Researcher', 'Research Assistant') NOT NULL DEFAULT 'Research Assistant'
 );
 
--- Project Table
+-- Project Table (Part 2)
 CREATE TABLE project (
     project_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
