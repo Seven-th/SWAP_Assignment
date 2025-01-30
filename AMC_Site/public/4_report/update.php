@@ -46,6 +46,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Report</title>
     <link rel="stylesheet" href="../assets/styles/dashboard.css">
+    <style>
+        .button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -69,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <button type="submit">Update Report</button>
         </form>
-        <a href="reports.php">Back to Reports</a>
+        <a href="reports.php" class="button">Back to Reports</a> <!-- Back button -->
     </div>
 </body>
 </html>

@@ -50,12 +50,25 @@ $reports = $pdo->query("SELECT * FROM reports")->fetchAll(PDO::FETCH_ASSOC);
             padding: 10px;
             text-align: left;
         }
+        .button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Reports Management</h1>
         <a href="create.php" class="button">Create New Report</a>
+        <a href="../dashboard.php" class="button">Back to Dashboard</a> <!-- Back button -->
         <div id="output">
             <?php if (!empty($message)) echo "<p>$message</p>"; ?>
         </div>
