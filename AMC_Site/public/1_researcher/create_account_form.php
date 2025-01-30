@@ -2,10 +2,16 @@
 session_start();
 require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; // Include database connection file
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ..\login_form.php");
-    exit;
+if (isset($_SESSION['user_id'])) {
+    if ((isset($_SESSION['role']) && ($_SESSION['role'] === 'Admin' || $_SESSION['role'] === 'Researcher'))){
+    } else {
+        die('Invalid Permissions: Required Admin or Researcher.');
+    }
+} else {
+    die("Invalid user ID.");
 }
+
+$is_admin = isset($_SESSION['role']) && $_SESSION['role'] === 'Admin';
 
 try {
     // Fetch all user data
@@ -24,7 +30,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account</title>
-    <link rel="stylesheet" href="\SWAP_Assignment\AMC_Site\assets\styles\user_profile.css">
+    <link rel="stylesheet" href="\SWAP_Assignment\AMC_Site\assets\styles\create_account.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
 </head>
 <body>
@@ -96,6 +102,7 @@ try {
                     <th>Phone Number</th>
                     <th>Password</th>
                     <th>Role</th>
+                    <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -109,12 +116,13 @@ try {
                             <td><strong>********</strong></td>
                             <td><?= htmlspecialchars($user['role']) ?></td>
                             <td class="action_buttons">
-                            <!-- Update Button -->
-                            <a href="profile_form.php?id=<?= $user['user_id'] ?>" class="update_button">Update</a>
-                            
-                            <!-- Delete Button -->
-                            <button class="delete_button" onclick="confirmDelete(<?= $user['user_id'] ?>)">Delete</button>
-                        </td>
+                                <!-- Update Button -->
+                                <button href="profile_form.php?id=<?= $user['user_id'] ?>" class="update_button">Update</button>
+                                <!-- Delete Button -->
+                                <?php if ($is_admin): ?>
+                                    <button class="delete_button" onclick="confirmDelete(<?= $user['user_id'] ?>)">Delete</button>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                     <?php else: ?>
