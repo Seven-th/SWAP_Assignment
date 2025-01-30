@@ -64,7 +64,7 @@ try {
                 <a href="dashboard.php" class="active"><i class="icon">🏠</i> Dashboard</a>
                 <a href="..\public\1_researcher\create_account_form.php"><i class="icon">👤</i> User Management</a>
                 <a href="inventory.php"><i class="icon">📦</i> Equipment</a>
-                <a href="reports.php"><i class="icon">📄</i> Reports</a>
+                <a href="../public/4_report/reports.php"><i class="icon">📄</i> Reports</a>
                 <a href="logout.php" onclick="confirm_logout()"><i class="icon">🚪</i> Logout</a>
             </nav>
         </aside>
