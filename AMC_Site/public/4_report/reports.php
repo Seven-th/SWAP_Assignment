@@ -39,28 +39,78 @@ $reports = $pdo->query("SELECT * FROM reports")->fetchAll(PDO::FETCH_ASSOC);
     <title>Reports Management</title>
     <link rel="stylesheet" href="../assets/styles/dashboard.css">
     <style>
+        body {
+            background: #F9F9F9;
+            color: #333;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #FFFFFF;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid #DDD;
+        }
+        h1, h2 {
+            color: black;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #D71920;
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background-color: #B6161A;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
+            margin-top: 20px;
         }
         th, td {
-            padding: 10px;
+            padding: 12px;
+            border: 1px solid #DDD;
             text-align: left;
         }
-        .button {
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: inline-block;
+        th {
+            background: #F1F1F1;
+            color: black;
         }
-        .button:hover {
-            background-color: #0056b3;
+        td {
+            background: #FFFFFF;
+            color: black;
+        }
+        button {
+            background: #FF5555;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #CC4444;
+        }
+        a.view-link, a.update-link {
+            color: #0066CC;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+        a.view-link:hover, a.update-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -68,7 +118,7 @@ $reports = $pdo->query("SELECT * FROM reports")->fetchAll(PDO::FETCH_ASSOC);
     <div class="container">
         <h1>Reports Management</h1>
         <a href="create.php" class="button">Create New Report</a>
-        <a href="../dashboard.php" class="button">Back to Dashboard</a> <!-- Back button -->
+        <a href="../dashboard.php" class="button">Back to Dashboard</a>
         <div id="output">
             <?php if (!empty($message)) echo "<p>$message</p>"; ?>
         </div>
@@ -96,9 +146,9 @@ $reports = $pdo->query("SELECT * FROM reports")->fetchAll(PDO::FETCH_ASSOC);
                                 <button type="submit" name="delete_report">Delete</button>
                             </form>
                             <?php if ($user_role === 'Admin'): ?>
-                                <a href="update.php?id=<?php echo $report['report_id']; ?>">Update</a>
+                                <a href="update.php?id=<?php echo $report['report_id']; ?>" class="update-link">Update</a>
                             <?php endif; ?>
-                            <a href="view.php?id=<?php echo $report['report_id']; ?>">View</a> <!-- View link -->
+                            <a href="view.php?id=<?php echo $report['report_id']; ?>" class="view-link">View</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

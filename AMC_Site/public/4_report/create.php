@@ -38,17 +38,76 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Create Report</title>
     <link rel="stylesheet" href="../assets/styles/dashboard.css">
     <style>
+        body {
+            background: #F9F9F9;
+            color: #333;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #FFFFFF;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid #DDD;
+        }
+        h1 {
+            color: black;
+        }
         .button {
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
+            padding: 10px 20px;
+            background-color: #D71920;
+            color: #FFFFFF;
             text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
+            border-radius: 6px;
+            font-weight: bold;
             display: inline-block;
+            margin-top: 20px;
         }
         .button:hover {
-            background-color: #0056b3;
+            background-color: #B6161A;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            text-align: left;
+            font-weight: bold;
+            color: black;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #DDD;
+            background: #FFFFFF;
+            color: black;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: none;
+            height: 40px;
+        }
+        button {
+            background: #D71920;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #B6161A;
         }
     </style>
 </head>
@@ -74,7 +133,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <button type="submit">Create Report</button>
         </form>
-        <a href="../4_report/reports.php" class="button">Back to Reports</a> <!-- Back button -->
+        <a href="../4_report/reports.php" class="button">Back to Reports</a>
     </div>
 </body>
 </html>
+

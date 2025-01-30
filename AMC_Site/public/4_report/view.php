@@ -28,6 +28,52 @@ if (isset($_GET['id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Report</title>
     <link rel="stylesheet" href="../assets/styles/dashboard.css">
+    <style>
+        body {
+            background: #F9F9F9;
+            color: #333;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #FFFFFF;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid #DDD;
+        }
+        h1, h2, h3 {
+            color: black;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #D71920;
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #B6161A;
+        }
+        p {
+            text-align: left;
+            background: #F1F1F1;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #DDD;
+            color: black;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -43,7 +89,7 @@ if (isset($_GET['id'])) {
                 <p>Report not found.</p>
             <?php endif; ?>
         </div>
-        <a href="../4_report/reports.php" class="button">Back to Reports</a> <!-- Back button -->
+        <a href="../4_report/reports.php" class="button">Back to Reports</a>
     </div>
 </body>
 </html>
