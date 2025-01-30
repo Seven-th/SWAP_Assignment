@@ -98,6 +98,7 @@ $reports = $pdo->query("SELECT * FROM reports")->fetchAll(PDO::FETCH_ASSOC);
                             <?php if ($user_role === 'Admin'): ?>
                                 <a href="update.php?id=<?php echo $report['report_id']; ?>">Update</a>
                             <?php endif; ?>
+                            <a href="view.php?id=<?php echo $report['report_id']; ?>">View</a> <!-- View link -->
                         </td>
                     </tr>
                 <?php endforeach; ?>
