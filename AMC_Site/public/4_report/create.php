@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; // Include the PDO connection file
+require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; // Database connection file
 
 // Check if user is logged in and has the appropriate role
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
@@ -11,22 +11,55 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
 $user_id = $_SESSION['user_id'];
 $user_role = $_SESSION['role'];
 
+// CSRF Protection: Generate a CSRF token if not set
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// Function to encrypt report data (AES-256)
+define("ENCRYPTION_KEY", "your_secret_encryption_key_here"); // Store securely
+function encryptData($data) {
+    $key = hash('sha256', ENCRYPTION_KEY, true);
+    $iv = random_bytes(16);
+    $encrypted = openssl_encrypt($data, 'AES-256-CBC', $key, 0, $iv);
+    return base64_encode($iv . $encrypted);
+}
+
+// Input Validation
+function sanitizeInput($input) {
+    return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
+}
+
 // Initialize feedback message
 $message = "";
 
 // Handle report creation
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $reportName = $_POST['report_name'];
-    $reportType = $_POST['report_type'];
-    $reportData = $_POST['report_data'];
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Invalid CSRF token. Possible attack detected.");
+    }
 
+    $reportName = sanitizeInput($_POST['report_name']);
+    $reportType = sanitizeInput($_POST['report_type']);
+    $reportData = sanitizeInput($_POST['report_data']);
+
+    // Authorization: Only Admin and Researcher can create reports
     if ($user_role === 'Admin' || $user_role === 'Researcher') {
-        $stmt = $pdo->prepare("INSERT INTO reports (report_name, report_type, generated_by, report_data) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$reportName, $reportType, $user_id, $reportData]);
-        $message = "Report created successfully.";
+        try {
+            $encryptedData = encryptData($reportData);
+            $stmt = $pdo->prepare("INSERT INTO reports (report_name, report_type, generated_by, report_data) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$reportName, $reportType, $user_id, $encryptedData]);
+            $message = "Report created successfully.";
+        } catch (Exception $e) {
+            $message = "Error creating report. Please try again later.";
+            error_log("Report Creation Error: " . $e->getMessage()); // Log error securely
+        }
     } else {
         $message = "You do not have permission to create reports.";
     }
+
+    // Regenerate CSRF token after form submission
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 ?>
 
@@ -118,6 +151,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php if (!empty($message)) echo "<p>$message</p>"; ?>
         </div>
         <form method="POST" action="">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
             <label for="report_name">Report Name:</label>
             <input type="text" id="report_name" name="report_name" required>
 
@@ -137,4 +172,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </body>
 </html>
-

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; // Include the PDO connection file
+require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; // Database connection file
 
 // Check if user is logged in and has the appropriate role
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
@@ -11,24 +11,71 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
 $user_id = $_SESSION['user_id'];
 $user_role = $_SESSION['role'];
 
+// CSRF Protection: Generate a CSRF token if not set
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// Encryption Function for Sensitive Data (AES-256)
+define("ENCRYPTION_KEY", "your_secret_encryption_key_here"); // Store securely
+function encryptData($data) {
+    $key = hash('sha256', ENCRYPTION_KEY, true);
+    $iv = random_bytes(16);
+    $encrypted = openssl_encrypt($data, 'AES-256-CBC', $key, 0, $iv);
+    return base64_encode($iv . $encrypted);
+}
+
+// Decryption Function
+function decryptData($encryptedData) {
+    $key = hash('sha256', ENCRYPTION_KEY, true);
+    $decoded = base64_decode($encryptedData);
+    $iv = substr($decoded, 0, 16);
+    $encryptedText = substr($decoded, 16);
+    return openssl_decrypt($encryptedText, 'AES-256-CBC', $key, 0, $iv);
+}
+
+// Input Validation
+function sanitizeInput($input) {
+    return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
+}
+
 // Initialize feedback message
 $message = "";
 
 // Handle delete report
-if (isset($_POST['delete_report'])) {
-    $report_id = $_POST['report_id'];
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_report'])) {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Invalid CSRF token. Possible attack detected.");
+    }
+
+    $report_id = sanitizeInput($_POST['report_id']);
+
     if ($user_role === 'Admin') {
-        $deleteStmt = $pdo->prepare("DELETE FROM reports WHERE report_id = :report_id");
-        $deleteStmt->bindParam(':report_id', $report_id);
-        $deleteStmt->execute();
-        $message = "Report deleted successfully.";
+        try {
+            $deleteStmt = $pdo->prepare("DELETE FROM reports WHERE report_id = :report_id");
+            $deleteStmt->bindParam(':report_id', $report_id, PDO::PARAM_INT);
+            $deleteStmt->execute();
+            $message = "Report deleted successfully.";
+        } catch (Exception $e) {
+            $message = "Error deleting report. Please try again later.";
+            error_log("Report Deletion Error: " . $e->getMessage()); // Secure error logging
+        }
     } else {
         $message = "You do not have permission to delete reports.";
     }
+
+    // Regenerate CSRF token after form submission
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Fetch all reports
-$reports = $pdo->query("SELECT * FROM reports")->fetchAll(PDO::FETCH_ASSOC);
+// Fetch all reports securely
+try {
+    $stmt = $pdo->query("SELECT report_id, report_name, report_type, generated_by, report_data FROM reports");
+    $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    error_log("Database Fetch Error: " . $e->getMessage());
+    $reports = [];
+}
 ?>
 
 <!DOCTYPE html>
@@ -136,19 +183,20 @@ $reports = $pdo->query("SELECT * FROM reports")->fetchAll(PDO::FETCH_ASSOC);
             <tbody>
                 <?php foreach ($reports as $report): ?>
                     <tr>
-                        <td><?php echo $report['report_id']; ?></td>
+                        <td><?php echo htmlspecialchars($report['report_id']); ?></td>
                         <td><?php echo htmlspecialchars($report['report_name']); ?></td>
                         <td><?php echo htmlspecialchars($report['report_type']); ?></td>
                         <td><?php echo htmlspecialchars($report['generated_by']); ?></td>
                         <td>
                             <form method="POST" style="display:inline;">
-                                <input type="hidden" name="report_id" value="<?php echo $report['report_id']; ?>">
-                                <button type="submit" name="delete_report">Delete</button>
+                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                <input type="hidden" name="report_id" value="<?php echo htmlspecialchars($report['report_id']); ?>">
+                                <button type="submit" name="delete_report" <?php echo ($user_role !== 'Admin') ? 'disabled' : ''; ?>>Delete</button>
                             </form>
                             <?php if ($user_role === 'Admin'): ?>
-                                <a href="update.php?id=<?php echo $report['report_id']; ?>" class="update-link">Update</a>
+                                <a href="update.php?id=<?php echo htmlspecialchars($report['report_id']); ?>" class="update-link">Update</a>
                             <?php endif; ?>
-                            <a href="view.php?id=<?php echo $report['report_id']; ?>" class="view-link">View</a>
+                            <a href="view.php?id=<?php echo htmlspecialchars($report['report_id']); ?>" class="view-link">View</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
