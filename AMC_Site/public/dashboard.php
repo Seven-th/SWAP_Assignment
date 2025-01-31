@@ -62,7 +62,7 @@ try {
         <div class="card">
             <h2>User Management</h2>
             <p>Manage Users</p>
-            <a href="../public/1_researcher/create_account.php" class="button">View</a>
+            <a href="../public/1_researcher/create_account_form.php" class="button">View</a>
         </div>
         <div class="card">
             <h2>Equipments</h2>
