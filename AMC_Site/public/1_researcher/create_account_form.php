@@ -40,7 +40,7 @@ try {
         <div class="tab-bar">
             <div class="tab active" data-role="Admin">Admin</div>
             <div class="tab" data-role="Researcher">Researcher</div>
-            <div class="tab" data-role="Assistant_Researcher">Assistant Researcher</div>
+            <div class="tab" data-role="Research Assistant">Research Assistant</div>
             <div class="tab-indicator"></div>
         </div>
 
@@ -49,12 +49,10 @@ try {
                 <div class="error-message" style="color: red;"><?= htmlspecialchars($error); ?></div>
             <?php endif; ?>
             <form action="create_account.php" method="POST">
-                <!-- Hidden input to help differentiate the INSERT POST and UPDATE POST -->
-                <input type="hidden" name="action" value="insert">
                 <!-- Hidden Input to Track permission -->
                 <input type="hidden" id="role" name="role" value="1" required>
                 <noscript>
-                    <input type="hidden" name="role" value="3" />
+                    <input type="hidden" name="role" value="3">
                 </noscript>
                     <!-- Name input -->
                     <div class="form-group">
@@ -117,7 +115,7 @@ try {
                             <td><?= htmlspecialchars($user['role']) ?></td>
                             <td class="action_buttons">
                                 <!-- Update Button -->
-                                <button href="profile_form.php?id=<?= $user['user_id'] ?>" class="update_button">Update</button>
+                                <a href="profile_form.php?id=<?= $user['user_id'] ?>" class="update_button">Update</a>
                                 <!-- Delete Button -->
                                 <?php if ($is_admin): ?>
                                     <button class="delete_button" onclick="confirmDelete(<?= $user['user_id'] ?>)">Delete</button>
