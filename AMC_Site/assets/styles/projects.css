@@ -105,8 +105,8 @@ td form {
 
 /* Make the action column wider with a minimum width of 80px */
 td:last-child {
-    width: 16%; /* Width of the column */
-    min-width: 150px;
+    width: 20%; /* Width of the column */
+    min-width: 200px;
     text-align: center; /* Center the buttons */
 }
 
@@ -116,19 +116,12 @@ td input[type="submit"] {
 }
 
 /* Target 'Add' and 'Delete' buttons only */
-td input[type="submit"][value="Edit"],
+td input[type="submit"][value="Update"],
 td input[type="submit"][value="Delete"] {
+    width: 48%; /* Set the button width to half the td */
     padding: 10px 15px; /* Add padding inside the button */
     margin-right: 4%; /* Adds space between the two buttons */
     cursor: pointer;
-}
-
-td input[type="submit"][value="Edit"] {
-    width: 40%; /* Set the button width to half the td */
-}
-
-td input[type="submit"][value="Delete"] {
-    width: 56%; /* Set the button width to half the td */
 }
 
 td input[type="submit"][value="Delete"]:last-child {

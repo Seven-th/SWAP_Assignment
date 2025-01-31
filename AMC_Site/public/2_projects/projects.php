@@ -158,7 +158,7 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <option value="Medium" <?php echo $project['project_priority_level'] == 'Medium' ? 'selected' : ''; ?>>Medium</option>
                                 <option value="High" <?php echo $project['project_priority_level'] == 'High' ? 'selected' : ''; ?>>High</option>
                             </select></td>
-                            <td><input type="submit" value="Edit"><input type="submit" name="action" value="Delete"></td>
+                            <td><input type="submit" value="Update"><input type="submit" name="action" value="Delete"></td>
                         </form>
                     </tr>
                 <?php endforeach; ?>
