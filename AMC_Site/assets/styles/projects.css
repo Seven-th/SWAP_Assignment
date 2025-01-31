@@ -1,0 +1,162 @@
+body {
+    font-family: 'Product Sans', Arial, sans-serif;
+    font-size: 20px;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    background: white;
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    min-width: 80vw;  /* Ensures the table is at least 80% of the viewport width */
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    font-size: 20px; /* Ensures all text is 20px */
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Ensure input fields fit within the table cells */
+input, select {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;  /* Prevents overflowing */
+    font-size: 20px;
+}
+
+/* Button Styling */
+input[type="submit"], button {
+    font-size: 20px;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    background-color: #007bff; /* Default to blue */
+}
+
+input[type="submit"]:hover, button:hover {
+    opacity: 0.8; /* Slight opacity on hover for better interaction feedback */
+}
+
+/* Edit Button */
+button.edit-button {
+    background-color: #007bff; /* Blue for Edit */
+}
+
+button.edit-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Delete Button */
+button.delete-button {
+    background-color: #dc3545; /* Red for Delete */
+}
+
+button.delete-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+/* Align Edit and Delete buttons in the same row */
+td form {
+    display: inline-flex;
+    justify-content: space-between; /* Ensures buttons are spaced on the same line */
+    gap: 10px; /* Adds spacing between buttons */
+    align-items: center; /* Vertically aligns buttons */
+}
+
+/* Make the action column wider with a minimum width of 80px */
+td:last-child {
+    width: 16%; /* Width of the column */
+    min-width: 150px;
+    text-align: center; /* Center the buttons */
+}
+
+td input[type="submit"] {
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+/* Target 'Add' and 'Delete' buttons only */
+td input[type="submit"][value="Edit"],
+td input[type="submit"][value="Delete"] {
+    padding: 10px 15px; /* Add padding inside the button */
+    margin-right: 4%; /* Adds space between the two buttons */
+    cursor: pointer;
+}
+
+td input[type="submit"][value="Edit"] {
+    width: 40%; /* Set the button width to half the td */
+}
+
+td input[type="submit"][value="Delete"] {
+    width: 56%; /* Set the button width to half the td */
+}
+
+td input[type="submit"][value="Delete"]:last-child {
+    margin-right: 0; /* Remove right margin from the last button */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+
+    table {
+        min-width: 100%;
+    }
+
+    td form {
+        flex-direction: column; /* Stack buttons vertically on small screens */
+        gap: 5px;
+    }
+
+    input, select {
+        font-size: 18px;
+    }
+
+    input[type="submit"] {
+        font-size: 18px;
+        padding: 8px 12px;
+    }
+}
