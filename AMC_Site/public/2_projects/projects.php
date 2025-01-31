@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
     $action = $_POST['action'];
 
-    if ($action === 'add' && ($user_role === 'Admin' || $user_role === 'Research Assistant')) {
+    if ($action === 'Add' && ($user_role === 'Admin' || $user_role === 'Research Assistant')) {
         $title = trim($_POST['title']);
         $description = trim($_POST['description']);
         $funding = floatval($_POST['funding']);
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
     }
 
-    elseif ($action === 'update' && ($user_role === 'Admin' || $user_role === 'Research Assistant')) {
+    elseif ($action === 'Update' && ($user_role === 'Admin' || $user_role === 'Research Assistant')) {
         $project_id = intval($_POST['project_id']);
         $title = trim($_POST['title']);
         $description = trim($_POST['description']);
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
     }
 
-    elseif ($action === 'delete' && $user_role === 'Admin') {
+    elseif ($action === 'Delete' && $user_role === 'Admin') {
         $project_id = intval($_POST['project_id']);
         
         if ($project_id > 0) {
@@ -121,7 +121,6 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </tr>
                 <tr>
                     <form method="post">
-                        <input type="hidden" name="action" value="add">
                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         <td><input type="text" name="title" required></td>
                         <td><input type="text" name="description" required></td>
@@ -135,7 +134,7 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <option value="Medium">Medium</option>
                             <option value="High">High</option>
                         </select></td>
-                        <td><input type="submit" value="Add"></td>
+                        <td><input type="submit" name="action" value="Add"></td>
                     </form>
                 </tr>
             </thead>
@@ -143,7 +142,6 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach ($projects as $project): ?>
                     <tr>
                         <form method="post">
-                            <input type="hidden" name="action" value="update">
                             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                             <input type="hidden" name="project_id" value="<?php echo $project['project_id']; ?>">
                             <td><input type="text" name="title" value="<?php echo htmlspecialchars($project['title']); ?>"></td>
@@ -158,7 +156,9 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <option value="Medium" <?php echo $project['project_priority_level'] == 'Medium' ? 'selected' : ''; ?>>Medium</option>
                                 <option value="High" <?php echo $project['project_priority_level'] == 'High' ? 'selected' : ''; ?>>High</option>
                             </select></td>
-                            <td><input type="submit" value="Update"><input type="submit" name="action" value="Delete"></td>
+                            <td>
+                                <input type="submit" name="action" value="Update"><input type="submit" name="action" value="Delete">
+                            </td>
                         </form>
                     </tr>
                 <?php endforeach; ?>
