@@ -6,6 +6,11 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     die("Invalid user ID.");
 }
 
+// CSRF token generation
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 $user_id = intval($_GET['id']);
 $error = "";
 $success = "";
@@ -79,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form class="update-form" action="profile_form.php?id=<?= htmlspecialchars($user['user_id']) ?>" method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <input type="hidden" name="user_id" value="1">
                 <div class="form-group">
                     <label for="name">Name</label>

@@ -13,6 +13,11 @@ if (isset($_SESSION['user_id'])) {
     die("Invalid user ID.");
 }
 
+// CSRF Token Generation and Validation
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 try {
     // Fetch all user data
     $stmt = $pdo->prepare("SELECT * FROM user");
@@ -24,6 +29,9 @@ try {
 
 // CREATE operation
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Invalid CSRF token.");
+    }
     // Ensures only Admins and Researcher can create new user accounts
     if ($_SESSION['role'] === "Admin" || $_SESSION["role"] === "Researcher") {
         // Sanitize and validate input
@@ -106,6 +114,8 @@ if (isset($_GET['id'])) {
                 <div class="error-message" style="color: red;"><?= htmlspecialchars($error); ?></div>
             <?php endif; ?>
             <form action="create_account_form.php" method="POST">
+                <!-- Hidden Input to Track CSRF Token -->
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <!-- Hidden Input to Track permission -->
                 <input type="hidden" id="role" name="role" value="1" required>
                 <noscript>
