@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'role' => $role
             ]);
             echo "User created successfully!";
+            header("Refresh:2; url=create_account_form.php");
                 } catch (PDOException $e) {
             $error = "Error creating user: " . $e->getMessage();
         }
