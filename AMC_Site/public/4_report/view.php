@@ -66,12 +66,12 @@ if (isset($_GET['id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Report</title>
-    <link rel="stylesheet" href="../assets/styles/dashboard.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
     <style>
         body {
             background: #F9F9F9;
             color: #333;
-            font-family: Arial, sans-serif;
+            font-family: 'Product Sans';
             display: flex;
             justify-content: center;
             align-items: center;
