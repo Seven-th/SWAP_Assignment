@@ -12,6 +12,12 @@ if (!isset($_SESSION['role'])) {
     exit();
 }
 
+// Restrict Research Assistants from accessing this page
+if ($_SESSION['role'] === 'Research Assistant') {
+    header("Location: /SWAP_Assignment/AMC_Site/public/unauthorized.php");
+    exit();
+}
+
 $user_role = $_SESSION['role'];
 $user_id = $_SESSION['user_id'];
 
