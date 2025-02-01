@@ -21,7 +21,9 @@ if ($conn->query($sql) === TRUE) {
 }
 
 // Select the database
-$conn->select_db($dbname);
+if (!$conn->select_db($dbname)) {
+    die("Error selecting database: " . $conn->error . "\n");
+}
 
 // User Table
 $sql = "
@@ -108,17 +110,26 @@ if ($conn->query($sql) === TRUE) {
     echo "Error creating table 'password_reset_requests': " . $conn->error . "\n";
 }
 
-// Insert sample users
-$sql = "
+// Insert sample users using prepared statements
+$stmt = $conn->prepare("
 INSERT INTO user (name, email, phone_number, password, role, password_set) 
-VALUES 
-('a', 'a@amc.com', '81111111', 'password', 'Admin', TRUE)
-";
-if ($conn->query($sql) === TRUE) {
-    echo "Sample users inserted successfully\n";
+VALUES (?, ?, ?, ?, ?, ?)
+");
+$name = 'a';
+$email = 'a@amc.com';
+$phone_number = '81111111';
+$password = 'password'; // In a real application, make sure to hash the password
+$role = 'Admin';
+$password_set = TRUE;
+
+$stmt->bind_param("sssssi", $name, $email, $phone_number, $password, $role, $password_set);
+
+if ($stmt->execute()) {
+    echo "Sample user inserted successfully\n";
 } else {
-    echo "Error inserting users: " . $conn->error . "\n";
+    echo "Error inserting user: " . $stmt->error . "\n";
 }
 
+$stmt->close();
 $conn->close();
 ?>
