@@ -35,27 +35,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
-    $password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_DEFAULT) : $user['password'];
     $role = trim($_POST['role']); // Now using ENUM
 
-    try {
-        $update_stmt = $pdo->prepare("
-            UPDATE user 
-            SET name = :name, email = :email, phone_number = :phone, password = :password, role = :role
-            WHERE user_id = :id
-        ");
-        $update_stmt->execute([
-            'name' => $name,
-            'email' => $email,
-            'phone' => $phone,
-            'password' => $password,
-            'role' => $role,
-            'id' => $user_id
-        ]);
+    $current_password = $_POST['current_password'];
+    $new_password = $_POST['new_password'];
+    $confirm_new_password = $_POST['confirm_new_password'];
 
-        $success = "User details updated successfully!";
-        // Refresh user data
-        header("Refresh:2; url=create_account_form.php");
+    // Validate the current password if new password is being set
+    if (!empty($new_password) || !empty($confirm_new_password)) {
+        if (!password_verify($current_password, $user['password']) || $current_password === $user['password']) {
+            $error = "Current password is incorrect.";
+        } elseif ($new_password !== $confirm_new_password) {
+            $error = "New passwords do not match.";
+        } else {
+            // Hash the new password
+            $password = password_hash($new_password, PASSWORD_DEFAULT);
+        }
+    } else {
+        // No new password provided, keep the existing password
+        $password = $user['password'];
+    }
+
+    try {
+            $update_stmt = $pdo->prepare("
+                UPDATE user 
+                SET name = :name, email = :email, phone_number = :phone, password = :password, role = :role
+                WHERE user_id = :id
+            ");
+            $update_stmt->execute([
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'password' => $password,
+                'role' => $role,
+                'id' => $user_id
+            ]);
+
+            $success = "User details updated successfully!";
+            // Refresh user data
+            header("Refresh:2; url=create_account_form.php");
+       
     } catch (PDOException $e) {
         $error = "Error updating user: " . $e->getMessage();
     }
@@ -73,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </head>
     <body>
         <div class="profile-container">
+            <a href="..\1_researcher\create_account_form.php" class="active"><i class="icon">🏠</i> Dashboard</a>
             <h1>User Profile</h1>
 
             <?php if (!empty($error)): ?>
@@ -99,8 +119,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($user['phone_number']) ?>" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password (Leave blank to keep current password)</label>
-                    <input type="password" id="password" name="password">
+                    <label for="current_password">Enter your current password (Leave blank to keep current password)</label>
+                    <input type="password" id="current_password" name="current_password">
+                </div>
+                <div class="form-group">
+                    <label for="new_password">Password (Leave blank to keep current password)</label>
+                    <input type="password" id="new_password" name="new_password">
+                </div>
+                <div class="form-group">
+                    <label for="confirm_new_password">Confirm New Password (Leave blank to keep current password)</label>
+                    <input type="password" id="confirm_new_password" name="confirm_new_password" placeholder="Confirm your new password">
                 </div>
                 <div class="form-group">
                     <label for="role">Role</label>
@@ -114,6 +142,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" class="update-btn">Update Profile</button>
             </form>
         </div>
-
     </body>
 </html>

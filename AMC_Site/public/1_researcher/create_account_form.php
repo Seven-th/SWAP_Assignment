@@ -184,7 +184,7 @@ if (isset($_GET['id'])) {
                                 <!-- Update Button -->
                                 <a href="profile_form.php?id=<?= $user['user_id'] ?>" class="update_button">Update</a>
                                 <!-- Delete Button -->
-                                <?php if ($_SESSION['role'] === "Admin"): ?>
+                                <?php if (($_SESSION['role'] === "Admin") && $user['user_id'] !== $_SESSION['user_id']): ?>
                                     <button action = "delete" class="delete_button" onclick="confirmDelete(<?= $user['user_id'] ?>)">Delete</button>
                                 <?php endif; ?>
                             </td>
