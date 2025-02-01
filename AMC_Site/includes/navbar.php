@@ -1,5 +1,4 @@
 <?php
-session_start();
 require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php';
 
 // Redirect to login if not authenticated
@@ -15,8 +14,8 @@ if (empty($_SESSION['csrf_token'])) {
 
 // Get user details
 $user_id = $_SESSION['user_id'];
-$role    = $_SESSION['role'];
-$name    = $_SESSION['name'];
+$role = $_SESSION['role'];
+$name = $_SESSION['name'];
 ?>
 
 <!DOCTYPE html>
@@ -26,20 +25,9 @@ $name    = $_SESSION['name'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
     <style>
-        /* Global Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Product Sans', sans-serif;
-        }
-        body {
-            background: #F9F9F9;
-            color: #333;
-            margin: 0;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Product Sans'; }
+        body { background: #F9F9F9; color: #333; }
         
-        /* Navbar Styles */
         .navbar { 
             background: #0066CC; 
             color: white; 
@@ -68,38 +56,9 @@ $name    = $_SESSION['name'];
             margin-left: 10px;
         }
         .logout:hover { background: #003366; }
-        
-        /* Centered Welcome Message Styles */
-        .welcome-message-container {
-            /* Adjusting height to fill the viewport below the navbar */
-            min-height: calc(100vh - 60px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-        }
-        .welcome-message {
-            background-color: #FFFFFF;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .welcome-message h1 {
-            margin-bottom: 10px;
-        }
-        .welcome-message p {
-            margin-bottom: 20px;
-            font-size: 18px;
-            color: #666;
-        }
-        .welcome-message a.logout {
-            display: inline-block;
-        }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
     <div class="navbar">
         <div class="logo">AMC Research Management</div>
         <div class="links">
@@ -115,20 +74,11 @@ $name    = $_SESSION['name'];
             <a href="logout.php" class="logout" onclick="return confirm_logout();">Logout</a>
         </div>
     </div>
-    
-    <!-- Separate Centered Welcome Message -->
-    <div class="welcome-message-container">
-        <div class="welcome-message">
-            <h1>Welcome to your dashboard,</h1>
-            <h1><?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>!</h1>
-            <p>Your role: <?= htmlspecialchars($role, ENT_QUOTES, 'UTF-8'); ?></p>
-        </div>
-    </div>
 
     <script>
-        function confirm_logout() {
-            return confirm("Are you sure you want to logout?");
-        }
+    function confirm_logout() {
+        return confirm("Are you sure you want to logout?");
+    }
     </script>
 </body>
 </html>

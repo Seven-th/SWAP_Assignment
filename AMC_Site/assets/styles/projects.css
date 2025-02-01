@@ -1,13 +1,9 @@
 body {
-    font-family: 'Product Sans', Arial, sans-serif;
+    font-family: 'Product Sans';
     font-size: 20px;
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
 }
 
 .container {
@@ -17,6 +13,7 @@ body {
     padding: 20px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    margin: 9% auto 20px;
 }
 
 h1 {
@@ -28,7 +25,6 @@ table {
     width: 100%;
     min-width: 80vw;  /* Ensures the table is at least 80% of the viewport width */
     border-collapse: collapse;
-    margin-top: 20px;
 }
 
 table, th, td {
