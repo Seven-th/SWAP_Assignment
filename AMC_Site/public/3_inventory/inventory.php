@@ -138,13 +138,13 @@ $equipment = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         <td></td>
                         <td>
-                            <input type="text" name="product_name" placeholder="Enter product name" required>
+                            <input type="text" name="product_name" placeholder="Product name" required>
                         </td>
                         <td>
-                            <input type="number" name="quantity" placeholder="Enter quantity" min="0" required>
+                            <input type="number" name="quantity" placeholder="Quantity" min="0" required>
                         </td>
                         <td>
-                            <input type="number" name="restock_level" placeholder="Enter restock level" min="0" required>
+                            <input type="number" name="restock_level" placeholder="Restock level" min="0" required>
                         </td>
                         <td>
                             <input type="submit" name="action" value="Add" class="btn">

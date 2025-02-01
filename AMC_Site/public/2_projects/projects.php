@@ -137,9 +137,9 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <tr>
                     <form method="post">
                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                        <td><input type="text" name="title" required></td>
-                        <td><input type="text" name="description" required></td>
-                        <td><input type="number" name="funding" step="0.01"></td>
+                        <td><input type="text" name="title" placeholder="Title" required></td>
+                        <td><input type="text" name="description" placeholder="Description" required></td>
+                        <td><input type="number" name="funding" placeholder="Funding" step="0.01" required></td>
                         <td><select name="status">
                             <option value="Ongoing">Ongoing</option>
                             <option value="Completed">Completed</option>
@@ -149,36 +149,42 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <option value="Medium">Medium</option>
                             <option value="High">High</option>
                         </select></td>
-                        <td><input type="text" name="assigned_to" required></td>
+                        <td><input type="text" name="assigned_to" placeholder="Assigned To" required></td>
                         <td><input type="submit" name="action" value="Add"></td>
                     </form>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($projects as $project): ?>
+                <?php if (!empty($projects)): ?>
+                    <?php foreach ($projects as $project): ?>
+                        <tr>
+                            <form method="post">
+                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                <input type="hidden" name="project_id" value="<?php echo $project['project_id']; ?>">
+                                <td><input type="text" name="title" value="<?php echo htmlspecialchars($project['title']); ?>"></td>
+                                <td><input type="text" name="description" value="<?php echo htmlspecialchars($project['description']); ?>"></td>
+                                <td><input type="number" name="funding" step="0.01" value="<?php echo $project['funding']; ?>"></td>
+                                <td><select name="status">
+                                    <option value="Ongoing" <?php echo $project['status'] == 'Ongoing' ? 'selected' : ''; ?>>Ongoing</option>
+                                    <option value="Completed" <?php echo $project['status'] == 'Completed' ? 'selected' : ''; ?>>Completed</option>
+                                </select></td>
+                                <td><select name="project_priority_level">
+                                    <option value="Low" <?php echo $project['project_priority_level'] == 'Low' ? 'selected' : ''; ?>>Low</option>
+                                    <option value="Medium" <?php echo $project['project_priority_level'] == 'Medium' ? 'selected' : ''; ?>>Medium</option>
+                                    <option value="High" <?php echo $project['project_priority_level'] == 'High' ? 'selected' : ''; ?>>High</option>
+                                </select></td>
+                                <td><input type="text" name="assigned_to" value="<?php echo htmlspecialchars($project['assigned_to']); ?>"></td>
+                                <td>
+                                    <input type="submit" name="action" value="Update"><input type="submit" name="action" value="Delete">
+                                </td>
+                            </form>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
                     <tr>
-                        <form method="post">
-                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                            <input type="hidden" name="project_id" value="<?php echo $project['project_id']; ?>">
-                            <td><input type="text" name="title" value="<?php echo htmlspecialchars($project['title']); ?>"></td>
-                            <td><input type="text" name="description" value="<?php echo htmlspecialchars($project['description']); ?>"></td>
-                            <td><input type="number" name="funding" step="0.01" value="<?php echo $project['funding']; ?>"></td>
-                            <td><select name="status">
-                                <option value="Ongoing" <?php echo $project['status'] == 'Ongoing' ? 'selected' : ''; ?>>Ongoing</option>
-                                <option value="Completed" <?php echo $project['status'] == 'Completed' ? 'selected' : ''; ?>>Completed</option>
-                            </select></td>
-                            <td><select name="project_priority_level">
-                                <option value="Low" <?php echo $project['project_priority_level'] == 'Low' ? 'selected' : ''; ?>>Low</option>
-                                <option value="Medium" <?php echo $project['project_priority_level'] == 'Medium' ? 'selected' : ''; ?>>Medium</option>
-                                <option value="High" <?php echo $project['project_priority_level'] == 'High' ? 'selected' : ''; ?>>High</option>
-                            </select></td>
-                            <td><input type="text" name="assigned_to" value="<?php echo htmlspecialchars($project['assigned_to']); ?>"></td>
-                            <td>
-                                <input type="submit" name="action" value="Update"><input type="submit" name="action" value="Delete">
-                            </td>
-                        </form>
+                        <td colspan="7">No equipment found in the inventory.</td>
                     </tr>
-                <?php endforeach; ?>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>

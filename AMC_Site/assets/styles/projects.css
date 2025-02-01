@@ -87,24 +87,6 @@ select[name="project_priority_level"] {
     width: 110px;
 }
 
-/* Edit Button */
-button.edit-button {
-    background-color: #007bff; /* Blue for Edit */
-}
-
-button.edit-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-}
-
-/* Delete Button */
-button.delete-button {
-    background-color: #dc3545; /* Red for Delete */
-}
-
-button.delete-button:hover {
-    background-color: #c82333; /* Darker red on hover */
-}
-
 /* Align buttons inside form cells */
 td form {
     display: inline-flex;
@@ -119,42 +101,25 @@ td:last-child {
     text-align: center;
 }
 
+/* Target 'Add' and 'Delete' buttons only */
+td input[type="submit"][value="Update"],
+td input[type="submit"][value="Delete"] {
+    width: 48%; /* Set the button width to half the td */
+    padding: 10px 15px; /* Add padding inside the button */
+    margin-right: 4%; /* Adds space between the two buttons */
+    cursor: pointer;
+}
+
+td input[type="submit"][value="Delete"]:last-child {
+    margin-right: 0; /* Remove right margin from the last button */
+}
+
 /* Button Container for Update and Delete */
 .button-container {
     display: flex;
-    gap: 10px;
 }
 
 .button-container input[type="submit"] {
     flex: 1;
     padding: 10px 15px;
 }
-<<<<<<< HEAD
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .container {
-        width: 100%;
-        padding: 10px;
-    }
-
-    table {
-        min-width: 100%;
-    }
-
-    td form {
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    input, select {
-        font-size: 18px;
-    }
-
-    input[type="submit"] {
-        font-size: 18px;
-        padding: 8px 12px;
-    }
-}
-=======
->>>>>>> 4ca115f1119f962d8a46288c46717e5cd1458f32
