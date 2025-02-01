@@ -55,28 +55,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // No new password provided, keep the existing password
         $password = $user['password'];
     }
+    if (empty($error)) {
+        try {
+                $update_stmt = $pdo->prepare("
+                    UPDATE user 
+                    SET name = :name, email = :email, phone_number = :phone, password = :password, role = :role
+                    WHERE user_id = :id
+                ");
+                $update_stmt->execute([
+                    'name' => $name,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'password' => $password,
+                    'role' => $role,
+                    'id' => $user_id
+                ]);
 
-    try {
-            $update_stmt = $pdo->prepare("
-                UPDATE user 
-                SET name = :name, email = :email, phone_number = :phone, password = :password, role = :role
-                WHERE user_id = :id
-            ");
-            $update_stmt->execute([
-                'name' => $name,
-                'email' => $email,
-                'phone' => $phone,
-                'password' => $password,
-                'role' => $role,
-                'id' => $user_id
-            ]);
-
-            $success = "User details updated successfully!";
-            // Refresh user data
-            header("Refresh:2; url=create_account_form.php");
-       
-    } catch (PDOException $e) {
-        $error = "Error updating user: " . $e->getMessage();
+                $success = "User details updated successfully!";
+                // Refresh user data
+                header("Refresh:2; url=create_account_form.php");
+        
+        } catch (PDOException $e) {
+            $error = "Error updating user: " . $e->getMessage();
+        }
     }
 }
 ?>
