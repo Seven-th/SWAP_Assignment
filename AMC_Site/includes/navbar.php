@@ -63,11 +63,11 @@ $name = $_SESSION['name'];
         <div class="logo">AMC Research Management</div>
         <div class="links">
             <?php if ($_SESSION['role'] !== "Research Assistant"): ?>
-                <a href="../public/1_researcher/create_account_form.php">User Management</a>
+                <a href="../../public/1_researcher/create_account_form.php">User Management</a>
             <?php endif; ?>
-            <a href="../public/2_projects/projects.php">Research Projects</a>
-            <a href="../public/3_inventory/inventory.php">Equipments</a>
-            <a href="../public/4_report/reports.php">Reports</a>
+            <a href="../../public/2_projects/projects.php">Research Projects</a>
+            <a href="../../public/3_inventory/inventory.php">Equipments</a>
+            <a href="../../public/4_report/reports.php">Reports</a>
         </div>
         <div class="user">
             Welcome, <?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?> (<?= htmlspecialchars($role, ENT_QUOTES, 'UTF-8'); ?>)
