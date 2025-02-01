@@ -61,6 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_report'])) {
             error_log("Report Deletion Error: " . $e->getMessage()); // Secure error logging
         }
     } else {
+        // Set an error message if the user is not an Admin
         $message = "You do not have permission to delete reports.";
     }
 
