@@ -91,37 +91,29 @@ button.delete-button:hover {
     background-color: #c82333; /* Darker red on hover */
 }
 
-/* Align Edit and Delete buttons in the same row */
+/* Align buttons inside form cells */
 td form {
     display: inline-flex;
-    justify-content: space-between; /* Ensures buttons are spaced on the same line */
-    gap: 10px; /* Adds spacing between buttons */
-    align-items: center; /* Vertically aligns buttons */
+    align-items: center;
+    gap: 10px;
 }
 
-/* Make the action column wider with a minimum width of 80px */
+/* Make the action column wider with a minimum width */
 td:last-child {
-    width: 20%; /* Width of the column */
+    width: 20%;
     min-width: 200px;
-    text-align: center; /* Center the buttons */
+    text-align: center;
 }
 
-td input[type="submit"] {
+/* Button Container for Update and Delete */
+.button-container {
+    display: flex;
+    gap: 10px;
+}
+
+.button-container input[type="submit"] {
+    flex: 1;
     padding: 10px 15px;
-    cursor: pointer;
-}
-
-/* Target 'Add' and 'Delete' buttons only */
-td input[type="submit"][value="Update"],
-td input[type="submit"][value="Delete"] {
-    width: 48%; /* Set the button width to half the td */
-    padding: 10px 15px; /* Add padding inside the button */
-    margin-right: 4%; /* Adds space between the two buttons */
-    cursor: pointer;
-}
-
-td input[type="submit"][value="Delete"]:last-child {
-    margin-right: 0; /* Remove right margin from the last button */
 }
 
 /* Responsive Design */
@@ -136,7 +128,7 @@ td input[type="submit"][value="Delete"]:last-child {
     }
 
     td form {
-        flex-direction: column; /* Stack buttons vertically on small screens */
+        flex-direction: column;
         gap: 5px;
     }
 

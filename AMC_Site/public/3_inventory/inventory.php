@@ -1,44 +1,44 @@
 <?php
 session_start();
-require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; // Ensure this matches your setup
+require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php';
 
-// Initialize variables for feedback messages
+// Initialize feedback messages
 $_SESSION['success'] = '';
-$_SESSION['error'] = '';
+$_SESSION['error']   = '';
 
-// Role-based access control
+// Ensure the user is logged in
 if (!isset($_SESSION['role'])) {
     header("Location: /SWAP_Assignment/AMC_Site/public/login.php");
     exit();
 }
 
 $user_role = $_SESSION['role'];
-$user_id = $_SESSION['user_id'];
+$user_id   = $_SESSION['user_id'];
 
-// CSRF token generation
+// Generate CSRF token if not already available
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Handle POST requests
+// Process POST requests for Add, Update, and Delete operations
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    // Check CSRF token
+    // Validate CSRF token
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die("Invalid CSRF token.");
     }
 
     $action = $_POST['action'];
 
-    // Handle Add Equipment (Admin and Research Assistant)
-    if ($action === 'add' && ($user_role === 'Admin' || $user_role === 'Research Assistant')) {
-        $product_name = trim($_POST['product_name']);
-        $quantity = intval($_POST['quantity']);
+    if ($action === 'Add' && ($user_role === 'Admin' || $user_role === 'Research Assistant')) {
+        // Adding new equipment
+        $product_name  = trim($_POST['product_name']);
+        $quantity      = intval($_POST['quantity']);
         $restock_level = intval($_POST['restock_level']);
 
         if (!empty($product_name) && $quantity >= 0 && $restock_level >= 0) {
             $stmt = $pdo->prepare("INSERT INTO equipment_inventory (product_name, quantity, restock_level) VALUES (?, ?, ?)");
             $stmt->execute([$product_name, $quantity, $restock_level]);
-            
+
             if ($stmt->rowCount() > 0) {
                 $_SESSION['success'] = "New equipment added successfully.";
             } else {
@@ -47,12 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         } else {
             $_SESSION['error'] = "Please provide valid inputs for adding equipment.";
         }
-    }
-
-    // Handle Update Equipment (Admin and Research Assistant)
-    elseif ($action === 'update' && ($user_role === 'Admin' || $user_role === 'Research Assistant')) {
-        $equipment_id = intval($_POST['equipment_id']);
-        $quantity = intval($_POST['quantity']);
+    } elseif ($action === 'Update' && ($user_role === 'Admin' || $user_role === 'Research Assistant')) {
+        // Updating equipment quantity and restock level
+        $equipment_id  = intval($_POST['equipment_id']);
+        $quantity      = intval($_POST['quantity']);
         $restock_level = intval($_POST['restock_level']);
 
         if ($equipment_id > 0 && $quantity >= 0 && $restock_level >= 0) {
@@ -62,15 +60,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             if ($stmt->rowCount() > 0) {
                 $_SESSION['success'] = "Equipment updated successfully.";
             } else {
-                $_SESSION['error'] = "No equipment found with the provided ID or access denied.";
+                $_SESSION['error'] = "No equipment found with the provided ID or no changes made.";
             }
         } else {
             $_SESSION['error'] = "Please provide valid inputs for updating equipment.";
         }
-    }
-
-    // Handle Delete Equipment (Admin only)
-    elseif ($action === 'delete' && $user_role === 'Admin') {
+    } elseif ($action === 'Delete' && $user_role === 'Admin') {
+        // Deleting equipment (Admin only)
         $equipment_id = intval($_POST['equipment_id']);
 
         if ($equipment_id > 0) {
@@ -87,14 +83,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
     }
 
+    // Redirect to avoid form resubmission
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
 
-// Fetch equipment inventory without filtering by assigned user
+// Retrieve all equipment records
 $stmt = $pdo->prepare("SELECT * FROM equipment_inventory");
 $stmt->execute();
-
 $equipment = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -103,114 +99,95 @@ $equipment = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Management</title>
-    <link rel="stylesheet" href="../../assets/styles/inventory.css">
+    <!-- Using the same CSS scheme as projects.php -->
+    <link rel="stylesheet" href="../../assets/styles/projects.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
 </head>
 <body>
+    <!-- Fixed navbar -->
     <div style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
         <?php require "../../includes/navbar.php"; ?>
     </div>
     <div class="container">
-        <div class="back-to-dashboard">
-            <a href='/SWAP_Assignment/AMC_Site/public/dashboard.php' class='btn'>Back to Dashboard</a>
-        </div>
+        <!-- Feedback Messages -->
         <?php if (!empty($_SESSION['success'])): ?>
             <div class="success-message">
                 <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
             </div>
         <?php endif; ?>
-
         <?php if (!empty($_SESSION['error'])): ?>
             <div class="error-message">
                 <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
             </div>
         <?php endif; ?>
 
-        <!-- Add Equipment Section -->
-        <?php if ($user_role === 'Admin' || $user_role === 'Research Assistant'): ?>
-            <div class="crud-box">
-                <h2>Add Equipment</h2>
-                <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
-                    <input type="hidden" name="action" value="add">
-                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                    <div class="textbox">
-                        <input type="text" name="product_name" placeholder="Enter product name" required>
-                    </div>
-                    <div class="textbox">
-                        <input type="number" name="quantity" placeholder="Enter quantity" min="0" required>
-                    </div>
-                    <div class="textbox">
-                        <input type="number" name="restock_level" placeholder="Enter restock level" min="0" required>
-                    </div>
-                    <input type="submit" value="Add Equipment" class="btn">
-                </form>
-            </div>
-        <?php endif; ?>
-
-        <!-- Equipment Inventory Section -->
-        <div class="crud-box">
-            <h2>Equipment Inventory</h2>
-            <?php if (!empty($equipment)): ?>
-                <table class='equipment-table'>
-                    <thead>
+        <!-- Equipment Inventory Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Restock Level</th>
+                    <th>Actions</th>
+                </tr>
+                <!-- Add Equipment Row (visible to Admin and Research Assistant) -->
+                <?php if ($user_role === 'Admin' || $user_role === 'Research Assistant'): ?>
+                <tr>
+                    <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                        <td></td>
+                        <td>
+                            <input type="text" name="product_name" placeholder="Enter product name" required>
+                        </td>
+                        <td>
+                            <input type="number" name="quantity" placeholder="Enter quantity" min="0" required>
+                        </td>
+                        <td>
+                            <input type="number" name="restock_level" placeholder="Enter restock level" min="0" required>
+                        </td>
+                        <td>
+                            <input type="submit" name="action" value="Add" class="btn">
+                        </td>
+                    </form>
+                </tr>
+                <?php endif; ?>
+            </thead>
+            <tbody>
+                <?php if (!empty($equipment)): ?>
+                    <?php foreach ($equipment as $item): ?>
                         <tr>
-                            <th>ID</th>
-                            <th>Product Name</th>
-                            <th>Quantity</th>
-                            <th>Restock Level</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($equipment as $item): ?>
-                            <tr>
+                            <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                <input type="hidden" name="equipment_id" value="<?php echo $item['equipment_id']; ?>">
                                 <td><?php echo htmlspecialchars($item['equipment_id']); ?></td>
                                 <td><?php echo htmlspecialchars($item['product_name']); ?></td>
-                                <td><?php echo htmlspecialchars($item['quantity']); ?></td>
-                                <td><?php echo htmlspecialchars($item['restock_level']); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php else: ?>
-                <p>No equipment found in the inventory.</p>
-            <?php endif; ?>
-        </div>
-
-        <!-- Update Equipment Section -->
-        <?php if ($user_role === 'Admin' || $user_role === 'Research Assistant'): ?>
-            <div class="crud-box">
-                <h2>Update Equipment</h2>
-                <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
-                    <input type="hidden" name="action" value="update">
-                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                    <div class="textbox">
-                        <input type="number" name="equipment_id" placeholder="Enter equipment ID" min="1" required>
-                    </div>
-                    <div class="textbox">
-                        <input type="number" name="quantity" placeholder="Enter new quantity" min="0" required>
-                    </div>
-                    <div class="textbox">
-                        <input type="number" name="restock_level" placeholder="Enter new restock level" min="0" required>
-                    </div>
-                    <input type="submit" value="Update Equipment" class="btn">
-                </form>
-            </div>
-        <?php endif; ?>
-
-        <!-- Delete Equipment Section -->
-        <?php if ($user_role === 'Admin'): ?>
-            <div class="crud-box">
-                <h2>Delete Equipment</h2>
-                <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
-                    <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                    <div class="textbox">
-                        <input type="number" name="equipment_id" placeholder="Enter equipment ID to delete" min="1" required>
-                    </div>
-                    <input type="submit" value="Delete Equipment" class="btn">
-                </form>
-            </div>
-        <?php endif; ?>
+                                <td>
+                                    <input type="number" name="quantity" value="<?php echo htmlspecialchars($item['quantity']); ?>" min="0" required>
+                                </td>
+                                <td>
+                                    <input type="number" name="restock_level" value="<?php echo htmlspecialchars($item['restock_level']); ?>" min="0" required>
+                                </td>
+                                <td>
+                                    <div class="button-container">
+                                        <?php if ($user_role === 'Admin' || $user_role === 'Research Assistant'): ?>
+                                            <input type="submit" name="action" value="Update" class="btn">
+                                        <?php endif; ?>
+                                        <?php if ($user_role === 'Admin'): ?>
+                                            <input type="submit" name="action" value="Delete" class="btn">
+                                        <?php endif; ?>
+                                    </div>
+                                </td>
+                            </form>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="5">No equipment found in the inventory.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
 </body>
 </html>
