@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS user (
     phone_number VARCHAR(15) NOT NULL,
     password VARCHAR(255) NOT NULL,
     role ENUM('Admin', 'Researcher', 'Research Assistant') NOT NULL DEFAULT 'Research Assistant'
+    password_set BOOLEAN DEFAULT FALSE
 )";
 if ($conn->query($sql) === TRUE) {
     echo "Table 'user' created successfully\n";
