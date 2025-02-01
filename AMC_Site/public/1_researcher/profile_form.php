@@ -1,4 +1,5 @@
 <?php
+session_start();
 require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; // Include database connection file
 
 // Check if an ID is provided in the URL
@@ -93,9 +94,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </head>
     <body>
         <div class="profile-container">
-            <a href="..\1_researcher\create_account_form.php" class="active"><i class="icon">🏠</i> Dashboard</a>
+            <div class = "back-button">
+                <a href="create_account_form.php">Back</a>
+            </div>  
             <h1>User Profile</h1>
-
             <?php if (!empty($error)): ?>
                 <p class="error"><?= htmlspecialchars($error); ?></p>
             <?php endif; ?>
@@ -106,7 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <form class="update-form" action="profile_form.php?id=<?= htmlspecialchars($user['user_id']) ?>" method="POST">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                <input type="hidden" name="user_id" value="1">
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" id="name" name="name" value="<?= htmlspecialchars($user['name']) ?>" required>

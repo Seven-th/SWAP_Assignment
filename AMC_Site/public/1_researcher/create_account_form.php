@@ -103,7 +103,6 @@ if (isset($_GET['id'])) {
         <?php require "../../includes/navbar.php"; ?>
     </div>
     <div class="create-account-container">
-        <a href="..\dashboard.php" class="active"><i class="icon">🏠</i> Dashboard</a>
         <h1>Create Account</h1>
         <div class="tab-bar">
             <div class="tab active" data-role="Admin">Admin</div>
