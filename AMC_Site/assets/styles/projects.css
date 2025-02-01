@@ -8,7 +8,6 @@ body {
 
 .container {
     width: 90%;
-    max-width: 1200px;
     background: white;
     padding: 20px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -73,6 +72,21 @@ input[type="submit"]:hover, button:hover {
     opacity: 0.8; /* Slight opacity on hover for better interaction feedback */
 }
 
+/* Funding Column */
+input[name="funding"] {
+    width: 120px;
+}
+
+/* Status Column */
+select[name="status"] {
+    width: 140px;
+}
+
+/* Priority Column */
+select[name="project_priority_level"] {
+    width: 110px;
+}
+
 /* Edit Button */
 button.edit-button {
     background-color: #007bff; /* Blue for Edit */
@@ -122,30 +136,4 @@ td input[type="submit"][value="Delete"] {
 
 td input[type="submit"][value="Delete"]:last-child {
     margin-right: 0; /* Remove right margin from the last button */
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .container {
-        width: 100%;
-        padding: 10px;
-    }
-
-    table {
-        min-width: 100%;
-    }
-
-    td form {
-        flex-direction: column; /* Stack buttons vertically on small screens */
-        gap: 5px;
-    }
-
-    input, select {
-        font-size: 18px;
-    }
-
-    input[type="submit"] {
-        font-size: 18px;
-        padding: 8px 12px;
-    }
 }
