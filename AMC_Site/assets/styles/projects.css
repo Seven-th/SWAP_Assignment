@@ -23,8 +23,8 @@ h1 {
 
 table {
     width: 100%;
-    min-width: 80vw;  /* Ensures the table is at least 80% of the viewport width */
     border-collapse: collapse;
+    padding: 0%;
 }
 
 table, th, td {
