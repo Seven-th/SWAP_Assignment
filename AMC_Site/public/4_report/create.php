@@ -92,28 +92,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border: 1px solid #DDD;
         }
         h1 {
-            color: black;
+            color: #0056b3; /* Blue Theme */
+            margin-bottom: 20px;
         }
         .button {
             padding: 10px 20px;
-            background-color: #D71920;
+            background-color: #0056b3; /* Updated Blue */
             color: #FFFFFF;
             text-decoration: none;
             border-radius: 6px;
             font-weight: bold;
             display: inline-block;
             margin-top: 20px;
+            border: none;
+            transition: background 0.3s ease-in-out;
         }
         .button:hover {
-            background-color: #B6161A;
+            background-color: #003d7a;
         }
         form {
             display: flex;
             flex-direction: column;
             gap: 15px;
+            text-align: left;
         }
         label {
-            text-align: left;
             font-weight: bold;
             color: black;
         }
@@ -121,26 +124,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             width: 100%;
             padding: 10px;
             border-radius: 5px;
-            border: 1px solid #DDD;
+            border: 1px solid #CCC;
             background: #FFFFFF;
             color: black;
             box-sizing: border-box;
         }
         textarea {
             resize: none;
-            height: 40px;
+            height: 80px;
         }
         button {
-            background: #D71920;
+            background: #0056b3; /* Updated Blue */
             color: #FFFFFF;
             border: none;
-            padding: 10px;
+            padding: 12px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
+            transition: background 0.3s ease-in-out;
         }
         button:hover {
-            background: #B6161A;
+            background: #003d7a;
         }
     </style>
 </head>
@@ -168,6 +172,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <button type="submit">Create Report</button>
         </form>
+
+        <!-- Back to Reports Button -->
         <a href="../4_report/reports.php" class="button">Back to Reports</a>
     </div>
 </body>
