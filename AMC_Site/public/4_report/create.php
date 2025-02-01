@@ -4,7 +4,7 @@ require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php
 
 // Check if user is logged in and has the appropriate role
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
-    header("Location: login_form.php");
+    header("Location: ../login_form.php");
     exit();
 }
 
