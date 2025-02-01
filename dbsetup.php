@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS user (
     email VARCHAR(255) NOT NULL UNIQUE,       
     phone_number VARCHAR(15) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role ENUM('Admin', 'Researcher', 'Research Assistant') NOT NULL DEFAULT 'Research Assistant'
+    role ENUM('Admin', 'Researcher', 'Research Assistant') NOT NULL DEFAULT 'Research Assistant',
     password_set BOOLEAN DEFAULT FALSE
 )";
 if ($conn->query($sql) === TRUE) {
@@ -103,15 +103,14 @@ CREATE TABLE IF NOT EXISTS password_reset_requests (
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
 )";
 if ($conn->query($sql) === TRUE) {
-    echo "Table 'reports' created successfully\n";
+    echo "Table 'password_reset_requests' created successfully\n";
 } else {
-    echo "Error creating table 'reports': " . $conn->error . "\n";
+    echo "Error creating table 'password_reset_requests': " . $conn->error . "\n";
 }
-
 
 // Insert sample users
 $sql = "
-INSERT INTO user (name, email, phone_number, password, role) 
+INSERT INTO user (name, email, phone_number, password, role, password_set) 
 VALUES 
 ('a', 'a@amc.com', '81111111', 'password', 'Admin', TRUE)
 ";
