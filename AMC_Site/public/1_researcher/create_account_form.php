@@ -99,6 +99,9 @@ if (isset($_GET['id'])) {
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap">
 </head>
 <body>
+    <div style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
+        <?php require "../../includes/navbar.php"; ?>
+    </div>
     <div class="create-account-container">
         <a href="..\dashboard.php" class="active"><i class="icon">🏠</i> Dashboard</a>
         <h1>Create Account</h1>

@@ -163,6 +163,9 @@ try {
     </style>
 </head>
 <body>
+    <div style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
+        <?php require "../../includes/navbar.php"; ?>
+    </div>
     <div class="container">
         <h1>Reports Management</h1>
         <a href="create.php" class="button">Create New Report</a>
