@@ -89,25 +89,28 @@ if (isset($_GET['id'])) {
             border: 1px solid #DDD;
         }
         h1, h2, h3 {
-            color: black;
+            color: #0056b3; /* Blue Theme */
+            margin-bottom: 15px;
         }
         .button {
             padding: 10px 20px;
-            background-color: #D71920;
+            background-color: #0056b3; /* Updated Blue */
             color: #FFFFFF;
             text-decoration: none;
             border-radius: 6px;
             font-weight: bold;
             display: inline-block;
             margin-top: 20px;
+            border: none;
+            transition: background 0.3s ease-in-out;
         }
         .button:hover {
-            background-color: #B6161A;
+            background-color: #003d7a;
         }
         p {
             text-align: left;
             background: #F1F1F1;
-            padding: 10px;
+            padding: 12px;
             border-radius: 6px;
             border: 1px solid #DDD;
             color: black;
@@ -130,6 +133,8 @@ if (isset($_GET['id'])) {
                 <p>Report not found.</p>
             <?php endif; ?>
         </div>
+
+        <!-- Back to Reports Button -->
         <a href="../4_report/reports.php" class="button">Back to Reports</a>
     </div>
 </body>

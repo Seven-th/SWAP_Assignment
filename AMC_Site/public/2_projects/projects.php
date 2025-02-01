@@ -35,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
     $action = $_POST['action'];
 
+    // Add Project
     if ($action === 'Add' && ($user_role === 'Admin' || $user_role === 'Research Assistant')) {
         $title = trim($_POST['title']);
         $description = trim($_POST['description']);
@@ -44,8 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $assigned_to = trim($_POST['assigned_to']);
         
         if (!empty($title) && !empty($description) && in_array($status, ['Ongoing', 'Completed']) && in_array($priority, ['Low', 'Medium', 'High'])) {
-            $stmt = $pdo->prepare("INSERT INTO project (title, description, funding, status, project_priority_level, generated_by, assigned_to) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$title, $description, $funding, $status, $priority, $user_id, $assigned_to]);
+            $stmt = $pdo->prepare("INSERT INTO project (title, description, funding, status, project_priority_level, assigned_to) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$title, $description, $funding, $status, $priority, $assigned_to]);
             
             if ($stmt->rowCount() > 0) {
                 $_SESSION['success'] = "Project added successfully.";
@@ -57,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
     }
 
+    // Update Project
     elseif ($action === 'Update' && ($user_role === 'Admin' || $user_role === 'Research Assistant')) {
         $project_id = intval($_POST['project_id']);
         $title = trim($_POST['title']);
@@ -64,10 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $funding = floatval($_POST['funding']);
         $status = $_POST['status'];
         $priority = $_POST['project_priority_level'];
+        $assigned_to = trim($_POST['assigned_to']);
         
         if ($project_id > 0 && !empty($title) && !empty($description) && in_array($status, ['Ongoing', 'Completed']) && in_array($priority, ['Low', 'Medium', 'High'])) {
-            $stmt = $pdo->prepare("UPDATE project SET title = ?, description = ?, funding = ?, status = ?, project_priority_level = ?, updated_at = CURRENT_TIMESTAMP WHERE project_id = ?");
-            $stmt->execute([$title, $description, $funding, $status, $priority, $project_id]);
+            $stmt = $pdo->prepare("UPDATE project SET title = ?, description = ?, funding = ?, status = ?, project_priority_level = ?, assigned_to = ? WHERE project_id = ?");
+            $stmt->execute([$title, $description, $funding, $status, $priority, $assigned_to, $project_id]);
+
             
             if ($stmt->rowCount() > 0) {
                 $_SESSION['success'] = "Project updated successfully.";
@@ -79,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
     }
 
+    // Delete Project
     elseif ($action === 'Delete' && $user_role === 'Admin') {
         $project_id = intval($_POST['project_id']);
         
@@ -126,6 +131,7 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <th>Funding</th>
                     <th>Status</th>
                     <th>Priority</th>
+                    <th>Assigned To</th>
                     <th>Actions</th>
                 </tr>
                 <tr>
@@ -143,6 +149,7 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <option value="Medium">Medium</option>
                             <option value="High">High</option>
                         </select></td>
+                        <td><input type="text" name="assigned_to" required></td>
                         <td><input type="submit" name="action" value="Add"></td>
                     </form>
                 </tr>
@@ -165,6 +172,7 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <option value="Medium" <?php echo $project['project_priority_level'] == 'Medium' ? 'selected' : ''; ?>>Medium</option>
                                 <option value="High" <?php echo $project['project_priority_level'] == 'High' ? 'selected' : ''; ?>>High</option>
                             </select></td>
+                            <td><input type="text" name="assigned_to" value="<?php echo htmlspecialchars($project['assigned_to']); ?>"></td>
                             <td>
                                 <input type="submit" name="action" value="Update"><input type="submit" name="action" value="Delete">
                             </td>

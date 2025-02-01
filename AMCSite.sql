@@ -21,11 +21,7 @@ CREATE TABLE project (
     funding DECIMAL(10, 2),
     status ENUM('Ongoing', 'Completed') DEFAULT 'Ongoing',
     project_priority_level ENUM('Low', 'Medium', 'High') NOT NULL,
-    generated_by INT NOT NULL,
-    assigned_to TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (generated_by) REFERENCES user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+    assigned_to TEXT NOT NULL
 );
 
 -- Equipment Inventory Table (Part 3)

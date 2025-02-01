@@ -16,24 +16,6 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Encryption Function for Sensitive Data (AES-256)
-define("ENCRYPTION_KEY", "your_secret_encryption_key_here"); // Store securely
-function encryptData($data) {
-    $key = hash('sha256', ENCRYPTION_KEY, true);
-    $iv = random_bytes(16);
-    $encrypted = openssl_encrypt($data, 'AES-256-CBC', $key, 0, $iv);
-    return base64_encode($iv . $encrypted);
-}
-
-// Decryption Function
-function decryptData($encryptedData) {
-    $key = hash('sha256', ENCRYPTION_KEY, true);
-    $decoded = base64_decode($encryptedData);
-    $iv = substr($decoded, 0, 16);
-    $encryptedText = substr($decoded, 16);
-    return openssl_decrypt($encryptedText, 'AES-256-CBC', $key, 0, $iv);
-}
-
 // Input Validation
 function sanitizeInput($input) {
     return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
@@ -71,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_report'])) {
 
 // Fetch all reports securely
 try {
-    $stmt = $pdo->query("SELECT report_id, report_name, report_type, generated_by, report_data FROM reports");
+    $stmt = $pdo->query("SELECT report_id, report_name, report_type, generated_by FROM reports");
     $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
     error_log("Database Fetch Error: " . $e->getMessage());
@@ -92,7 +74,7 @@ try {
             color: #333;
             font-family: Arial, sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 100vh;
             margin: 0;
@@ -106,23 +88,35 @@ try {
             width: 100%;
             text-align: center;
             border: 1px solid #DDD;
+            margin-top: 80px; /* Space below navbar */
         }
         h1, h2 {
-            color: black;
+            color: #0056b3; /* Matching navbar */
+            margin-bottom: 20px;
         }
         .button {
             padding: 10px 20px;
-            background-color: #D71920;
+            background-color: #0056b3; /* Blue color */
             color: #FFFFFF;
             text-decoration: none;
             border-radius: 6px;
             font-weight: bold;
             display: inline-block;
-            margin: 10px 5px;
+            border: none;
+            transition: background 0.3s ease-in-out;
         }
         .button:hover {
-            background-color: #B6161A;
+            background-color: #003d7a;
         }
+
+        /* Centered button at the top */
+        .top-button {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px; /* Uniform spacing */
+        }
+
+        /* Table Styling */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -134,31 +128,31 @@ try {
             text-align: left;
         }
         th {
-            background: #F1F1F1;
-            color: black;
+            background: #0056b3;
+            color: white;
         }
         td {
             background: #FFFFFF;
             color: black;
         }
         button {
-            background: #FF5555;
+            background: #0056b3;
             color: white;
             border: none;
             padding: 8px 12px;
             border-radius: 5px;
             cursor: pointer;
+            transition: background 0.3s ease-in-out;
         }
         button:hover {
-            background: #CC4444;
+            background: #003d7a;
         }
-        a.view-link, a.update-link {
-            color: #0066CC;
-            text-decoration: none;
-            margin-left: 10px;
-        }
-        a.view-link:hover, a.update-link:hover {
-            text-decoration: underline;
+
+        /* Back to Dashboard at the bottom */
+        .bottom-button {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
         }
     </style>
 </head>
@@ -166,13 +160,19 @@ try {
     <div style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
         <?php require "../../includes/navbar.php"; ?>
     </div>
+
     <div class="container">
         <h1>Reports Management</h1>
-        <a href="create.php" class="button">Create New Report</a>
-        <a href="../dashboard.php" class="button">Back to Dashboard</a>
+
+        <!-- Create Report Button Centered -->
+        <div class="top-button">
+            <a href="create.php" class="button">Create New Report</a>
+        </div>
+
         <div id="output">
             <?php if (!empty($message)) echo "<p>$message</p>"; ?>
         </div>
+
         <h2>Existing Reports</h2>
         <table>
             <thead>
@@ -185,27 +185,36 @@ try {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($reports as $report): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($report['report_id']); ?></td>
-                        <td><?php echo htmlspecialchars($report['report_name']); ?></td>
-                        <td><?php echo htmlspecialchars($report['report_type']); ?></td>
-                        <td><?php echo htmlspecialchars($report['generated_by']); ?></td>
-                        <td>
-                            <form method="POST" style="display:inline;">
-                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                                <input type="hidden" name="report_id" value="<?php echo htmlspecialchars($report['report_id']); ?>">
-                                <button type="submit" name="delete_report" <?php echo ($user_role !== 'Admin') ? 'disabled' : ''; ?>>Delete</button>
-                            </form>
-                            <?php if ($user_role === 'Admin'): ?>
-                                <a href="update.php?id=<?php echo htmlspecialchars($report['report_id']); ?>" class="update-link">Update</a>
-                            <?php endif; ?>
-                            <a href="view.php?id=<?php echo htmlspecialchars($report['report_id']); ?>" class="view-link">View</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
+                <?php if (!empty($reports)): ?>
+                    <?php foreach ($reports as $report): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($report['report_id']); ?></td>
+                            <td><?php echo htmlspecialchars($report['report_name']); ?></td>
+                            <td><?php echo htmlspecialchars($report['report_type']); ?></td>
+                            <td><?php echo htmlspecialchars($report['generated_by']); ?></td>
+                            <td>
+                                <form method="POST" style="display:inline;">
+                                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                    <input type="hidden" name="report_id" value="<?php echo htmlspecialchars($report['report_id']); ?>">
+                                    <button type="submit" name="delete_report" <?php echo ($user_role !== 'Admin') ? 'disabled' : ''; ?>>Delete</button>
+                                </form>
+                                <?php if ($user_role === 'Admin'): ?>
+                                    <a href="update.php?id=<?php echo htmlspecialchars($report['report_id']); ?>" class="update-link">Update</a>
+                                <?php endif; ?>
+                                <a href="view.php?id=<?php echo htmlspecialchars($report['report_id']); ?>" class="view-link">View</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="5">No reports available.</td></tr>
+                <?php endif; ?>
             </tbody>
         </table>
+    </div>
+
+    <!-- Back to Dashboard Button at Bottom -->
+    <div class="bottom-button">
+        <a href="../dashboard.php" class="button">Back to Dashboard</a>
     </div>
 </body>
 </html>
