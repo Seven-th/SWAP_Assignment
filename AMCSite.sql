@@ -9,7 +9,8 @@ CREATE TABLE user (
     email VARCHAR(255) NOT NULL UNIQUE,       
     phone_number VARCHAR(15) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role ENUM('Admin', 'Researcher', 'Research Assistant') NOT NULL DEFAULT 'Research Assistant'
+    role ENUM('Admin', 'Researcher', 'Research Assistant') NOT NULL DEFAULT 'Research Assistant',
+    password_set BOOLEAN DEFAULT FALSE
 );
 
 -- Project Table (Part 2)
@@ -57,5 +58,5 @@ CREATE TABLE password_reset_requests (
 
 
 -- Insert Users
-INSERT INTO user (name, email, phone_number, password, role) 
+INSERT INTO user (name, email, phone_number, password, role, password_set) 
 VALUES ('a', 'a@amc.com', '81111111', 'password', 'Admin', TRUE);
