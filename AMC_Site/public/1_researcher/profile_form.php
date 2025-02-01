@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate the current password if new password is being set
     if (!empty($new_password) || !empty($confirm_new_password)) {
-        if (!password_verify($current_password, $user['password']) || $current_password === $user['password']) {
+        if (!password_verify($current_password, $user['password'])) {
             $error = "Current password is incorrect.";
         } elseif ($new_password !== $confirm_new_password) {
             $error = "New passwords do not match.";
