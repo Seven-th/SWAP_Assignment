@@ -65,6 +65,11 @@ try {
             <a href="../public/1_researcher/create_account_form.php" class="button">View</a>
         </div>
         <div class="card">
+            <h2>Research Projects</h2>
+            <p>Manage Projects</p>
+            <a href="../public/2_projects/projects.php" class="button">View</a>
+        </div>
+        <div class="card">
             <h2>Equipments</h2>
             <p>Manage Equipments</p>
             <a href="../public/3_inventory/inventory.php" class="button">View</a>
