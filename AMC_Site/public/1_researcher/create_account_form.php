@@ -48,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             // Insert new user into the database
             $stmt = $pdo->prepare("
-                INSERT INTO user (name, email, phone_number, password, role) 
-                VALUES (:name, :email, :phone_number, :password, :role)
+                INSERT INTO user (name, email, phone_number, password, role, password_set) 
+                VALUES (:name, :email, :phone_number, :password, :role, FALSE)
             ");
                     $stmt->execute([
                         'name' => $name,
@@ -244,7 +244,7 @@ if (isset($_GET['id'])) {
         // JAvaScript to ensure no accidental deletion
         function confirmDelete(user_id) {
             if (confirm("Are you sure you want to delete this researcher?")) {
-                window.location.href = "create_account_form.php?id=" + user_id;
+                window.location.href = "create_account_form.php?id=" + urlencode(user_id);
             }
         }
     </script>

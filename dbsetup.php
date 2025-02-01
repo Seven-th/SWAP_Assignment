@@ -92,13 +92,27 @@ if ($conn->query($sql) === TRUE) {
     echo "Error creating table 'reports': " . $conn->error . "\n";
 }
 
+// Password Reset Table
+$sql = "
+CREATE TABLE IF NOT EXISTS password_reset_requests (
+    request_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token VARCHAR(64) NOT NULL UNIQUE,
+    expires_at DATETIME NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "Table 'reports' created successfully\n";
+} else {
+    echo "Error creating table 'reports': " . $conn->error . "\n";
+}
+
+
 // Insert sample users
 $sql = "
 INSERT INTO user (name, email, phone_number, password, role) 
 VALUES 
-('a', 'a@amc.com', '81111111', 'password', 'Admin'),
-('r', 'r@amc.com', '82222222', 'password', 'Researcher'),
-('ra', 'ra@amc.com', '83333333', 'password', 'Research Assistant');
+('a', 'a@amc.com', '81111111', 'password', 'Admin', TRUE)
 ";
 if ($conn->query($sql) === TRUE) {
     echo "Sample users inserted successfully\n";

@@ -46,9 +46,16 @@ CREATE TABLE reports (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (generated_by) REFERENCES user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+-- Password reset request table (Group Component
+CREATE TABLE password_reset_requests (
+    request_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token VARCHAR(64) NOT NULL UNIQUE,
+    expires_at DATETIME NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
+);
+
 
 -- Insert Users
 INSERT INTO user (name, email, phone_number, password, role) 
-VALUES ('a', 'a@amc.com', '81111111', 'password', 'Admin'),
-       ('r', 'r@amc.com', '82222222', 'password', 'Researcher'),
-       ('ra', 'ra@amc.com', '83333333', 'password', 'Research Assistant');
+VALUES ('a', 'a@amc.com', '81111111', 'password', 'Admin', TRUE);
