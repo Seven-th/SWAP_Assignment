@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: forget_pass_form.php?msg=Please set your password first.");
             exit;
         }
-        if (password_verify($password, $user['password'])) {
+        if (password_verify($password, $user['password']) || $password === $user['password']) {
             // password is correct, start a session
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['role'] = $user['role'];

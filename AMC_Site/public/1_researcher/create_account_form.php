@@ -244,7 +244,7 @@ if (isset($_GET['id'])) {
         // JAvaScript to ensure no accidental deletion
         function confirmDelete(user_id) {
             if (confirm("Are you sure you want to delete this researcher?")) {
-                window.location.href = "create_account_form.php?id=" + urlencode(user_id);
+                window.location.href = "create_account_form.php?id=" + user_id;
             }
         }
     </script>

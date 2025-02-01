@@ -41,7 +41,9 @@ $name = $_SESSION['name'];
     <div class="navbar">
         <div class="logo">AMC Research Management</div>
         <div class="links">
-            <a href="../public/1_researcher/create_account_form.php">User Management</a>
+            <?php if ($_SESSION['role'] !== "Research Assistant"): ?>
+                <a href="../public/1_researcher/create_account_form.php">User Management</a>
+            <?php endif; ?>
             <a href="../public/2_projects/projects.php">Research Projects</a>
             <a href="../public/3_inventory/inventory.php">Equipments</a>
             <a href="../public/4_report/reports.php">Reports</a>
