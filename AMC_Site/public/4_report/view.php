@@ -1,8 +1,7 @@
 <?php
 session_start();
-require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; // Database connection file
+require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; 
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
     header("Location: ../login_form.php");
     exit();
@@ -11,13 +10,11 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
 $user_id = $_SESSION['user_id'];
 $user_role = $_SESSION['role'];
 
-// CSRF Protection: Ensure session has a CSRF token
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Encryption Function for Sensitive Data (AES-256)
-define("ENCRYPTION_KEY", "your_secret_encryption_key_here"); // Store securely
+define("ENCRYPTION_KEY", "your_secret_encryption_key_here");
 function decryptData($encryptedData) {
     $key = hash('sha256', ENCRYPTION_KEY, true);
     $decoded = base64_decode($encryptedData);
@@ -26,15 +23,12 @@ function decryptData($encryptedData) {
     return openssl_decrypt($encryptedText, 'AES-256-CBC', $key, 0, $iv);
 }
 
-// Input Validation
 function sanitizeInput($input) {
     return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
 }
 
-// Initialize feedback message
 $message = "";
 
-// Fetch report data securely
 if (isset($_GET['id'])) {
     $report_id = sanitizeInput($_GET['id']);
 
@@ -44,7 +38,6 @@ if (isset($_GET['id'])) {
         $stmt->execute();
         $report = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Decrypt report data
         if ($report) {
             $report['report_data'] = decryptData($report['report_data']);
         } else {
@@ -89,12 +82,12 @@ if (isset($_GET['id'])) {
             border: 1px solid #DDD;
         }
         h1, h2, h3 {
-            color: #0056b3; /* Blue Theme */
+            color: #0056b3; 
             margin-bottom: 15px;
         }
         .button {
             padding: 10px 20px;
-            background-color: #0056b3; /* Updated Blue */
+            background-color: #0056b3; 
             color: #FFFFFF;
             text-decoration: none;
             border-radius: 6px;
@@ -134,7 +127,6 @@ if (isset($_GET['id'])) {
             <?php endif; ?>
         </div>
 
-        <!-- Back to Reports Button -->
         <a href="../4_report/reports.php" class="button">Back to Reports</a>
     </div>
 </body>

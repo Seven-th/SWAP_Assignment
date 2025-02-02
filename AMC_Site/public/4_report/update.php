@@ -1,8 +1,7 @@
 <?php
 session_start();
-require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; // Database connection file
+require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; 
 
-// Check if user is logged in and has the appropriate role
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
     header("Location: ../login_form.php");
     exit();
@@ -11,13 +10,11 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
 $user_id = $_SESSION['user_id'];
 $user_role = $_SESSION['role'];
 
-// CSRF Protection: Generate a CSRF token if not set
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Encryption Function for Sensitive Data (AES-256)
-define("ENCRYPTION_KEY", "your_secret_encryption_key_here"); // Store securely
+define("ENCRYPTION_KEY", "your_secret_encryption_key_here"); 
 function encryptData($data) {
     $key = hash('sha256', ENCRYPTION_KEY, true);
     $iv = random_bytes(16);
@@ -25,7 +22,6 @@ function encryptData($data) {
     return base64_encode($iv . $encrypted);
 }
 
-// Decryption Function
 function decryptData($encryptedData) {
     $key = hash('sha256', ENCRYPTION_KEY, true);
     $decoded = base64_decode($encryptedData);
@@ -34,15 +30,12 @@ function decryptData($encryptedData) {
     return openssl_decrypt($encryptedText, 'AES-256-CBC', $key, 0, $iv);
 }
 
-// Input Validation
 function sanitizeInput($input) {
     return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
 }
 
-// Initialize feedback message
 $message = "";
 
-// Fetch report data for the given ID
 if (isset($_GET['id'])) {
     $report_id = sanitizeInput($_GET['id']);
     try {
@@ -51,7 +44,6 @@ if (isset($_GET['id'])) {
         $stmt->execute();
         $report = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Decrypt report data
         if ($report) {
             $report['report_data'] = decryptData($report['report_data']);
         } else {
@@ -63,7 +55,6 @@ if (isset($_GET['id'])) {
     }
 }
 
-// Handle report update
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die("Invalid CSRF token. Possible attack detected.");
@@ -86,7 +77,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = "You do not have permission to update reports.";
     }
 
-    // Regenerate CSRF token after form submission
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 ?>
@@ -120,12 +110,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border: 1px solid #DDD;
         }
         h1 {
-            color: #0056b3; /* Blue Theme */
+            color: #0056b3; 
             margin-bottom: 20px;
         }
         .button {
             padding: 10px 20px;
-            background-color: #0056b3; /* Updated Blue */
+            background-color: #0056b3;
             color: #FFFFFF;
             text-decoration: none;
             border-radius: 6px;
@@ -162,7 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             height: 100px;
         }
         button {
-            background: #0056b3; /* Updated Blue */
+            background: #0056b3; 
             color: #FFFFFF;
             border: none;
             padding: 12px;
@@ -201,7 +191,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit">Update Report</button>
         </form>
 
-        <!-- Back to Reports Button -->
         <a href="reports.php" class="button">Back to Reports</a>
     </div>
 </body>

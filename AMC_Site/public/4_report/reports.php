@@ -1,8 +1,7 @@
 <?php
 session_start();
-require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; // Database connection file
+require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php'; 
 
-// Check if user is logged in and has the appropriate role
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
     header("Location: ../login_form.php");
     exit();
@@ -11,20 +10,16 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
 $user_id = $_SESSION['user_id'];
 $user_role = $_SESSION['role'];
 
-// CSRF Protection: Generate a CSRF token if not set
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Input Validation
 function sanitizeInput($input) {
     return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
 }
 
-// Initialize feedback message
 $message = "";
 
-// Handle delete report
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_report'])) {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die("Invalid CSRF token. Possible attack detected.");
@@ -40,18 +35,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_report'])) {
             $message = "Report deleted successfully.";
         } catch (Exception $e) {
             $message = "Error deleting report. Please try again later.";
-            error_log("Report Deletion Error: " . $e->getMessage()); // Secure error logging
+            error_log("Report Deletion Error: " . $e->getMessage()); 
         }
     } else {
-        // Set an error message if the user is not an Admin
         $message = "You do not have permission to delete reports.";
     }
 
-    // Regenerate CSRF token after form submission
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Fetch all reports securely
 try {
     $stmt = $pdo->query("SELECT report_id, report_name, report_type, generated_by FROM reports");
     $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -88,15 +80,15 @@ try {
             width: 100%;
             text-align: center;
             border: 1px solid #DDD;
-            margin-top: 80px; /* Space below navbar */
+            margin-top: 80px; 
         }
         h1, h2 {
-            color: #0056b3; /* Matching navbar */
+            color: #0056b3;
             margin-bottom: 20px;
         }
         .button {
             padding: 10px 20px;
-            background-color: #0056b3; /* Blue color */
+            background-color: #0056b3; 
             color: #FFFFFF;
             text-decoration: none;
             border-radius: 6px;
@@ -148,7 +140,6 @@ try {
             background: #003d7a;
         }
 
-        /* Back to Dashboard at the bottom */
         .bottom-button {
             margin-top: 30px;
             display: flex;
@@ -164,7 +155,6 @@ try {
     <div class="container">
         <h1>Reports Management</h1>
 
-        <!-- Create Report Button Centered -->
         <div class="top-button">
             <a href="create.php" class="button">Create New Report</a>
         </div>
@@ -212,7 +202,6 @@ try {
         </table>
     </div>
 
-    <!-- Back to Dashboard Button at Bottom -->
     <div class="bottom-button">
         <a href="../dashboard.php" class="button">Back to Dashboard</a>
     </div>
