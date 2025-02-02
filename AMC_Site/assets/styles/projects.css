@@ -34,6 +34,7 @@ th, td {
     padding: 10px;
     text-align: left;
     font-size: 20px; /* Ensures all text is 20px */
+    display: flex"
 }
 
 th {
@@ -106,11 +107,11 @@ td input[type="submit"][value="Update"],
 td input[type="submit"][value="Delete"] {
     width: 48%; /* Set the button width to half the td */
     padding: 10px 15px; /* Add padding inside the button */
-    margin-right: 4%; /* Adds space between the two buttons */
     cursor: pointer;
 }
 
 td input[type="submit"][value="Delete"]:last-child {
+    margin-left: 4%; /* Adds space between the two buttons */
     margin-right: 0; /* Remove right margin from the last button */
 }
 
