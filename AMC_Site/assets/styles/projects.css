@@ -73,21 +73,6 @@ input[type="submit"]:hover, button:hover {
     opacity: 0.8; /* Slight opacity on hover for better interaction feedback */
 }
 
-/* Funding Column */
-input[name="funding"] {
-    width: 120px;
-}
-
-/* Status Column */
-select[name="status"] {
-    width: 140px;
-}
-
-/* Priority Column */
-select[name="project_priority_level"] {
-    width: 110px;
-}
-
 /* Align buttons inside form cells */
 td form {
     display: inline-flex;

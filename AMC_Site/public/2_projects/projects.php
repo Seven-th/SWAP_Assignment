@@ -140,10 +140,10 @@ try {
                 <tr>
                     <th>Title</th>
                     <th>Description</th>
-                    <th>Funding</th>
-                    <th>Status</th>
-                    <th>Priority</th>
-                    <th>Assigned To
+                    <th style="width: 140px">Funding</th>
+                    <th style="width: 160px">Status</th>
+                    <th style="width: 140px">Priority</th>
+                    <th style="width: 140px">Assigned To <br>
                         <sub style="font-size: 12px">(Assistant Researcher)</sub>
                     </th>
                     <th>Actions</th>
@@ -155,17 +155,19 @@ try {
                             <td><input type="text" name="title" placeholder="Title" required></td>
                             <td><input type="text" name="description" placeholder="Description" required></td>
                             <td><input type="number" name="funding" placeholder="Funding" step="0.01" required></td>
-                            <td><select name="status">
+                            <td><select name="status" required>
+                                <option value="">-Select-</option>
                                 <option value="Ongoing">Ongoing</option>
                                 <option value="Completed">Completed</option>
                             </select></td>
-                            <td><select name="project_priority_level">
+                            <td><select name="project_priority_level" required>
+                                <option value="">-Select-</option>
                                 <option value="Low">Low</option>
                                 <option value="Medium">Medium</option>
                                 <option value="High">High</option>
                             </select></td>
                             <td>
-                                <select name="assigned_to">
+                                <select name="assigned_to" required>
                                     <option value="">-Select-</option>
                                     <?php foreach ($users as $user): ?>
                                         <?php if ($user['role'] === 'Research Assistant'): ?>
@@ -188,29 +190,76 @@ try {
                             <form method="post">
                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                 <input type="hidden" name="project_id" value="<?php echo $project['project_id']; ?>">
-                                <td><input type="text" name="title" value="<?php echo htmlspecialchars($project['title']); ?>"></td>
-                                <td><input type="text" name="description" value="<?php echo htmlspecialchars($project['description']); ?>"></td>
-                                <td><input type="number" name="funding" step="0.01" value="<?php echo $project['funding']; ?>"></td>
-                                <td><select name="status">
-                                    <option value="Ongoing" <?php echo $project['status'] == 'Ongoing' ? 'selected' : ''; ?>>Ongoing</option>
-                                    <option value="Completed" <?php echo $project['status'] == 'Completed' ? 'selected' : ''; ?>>Completed</option>
-                                </select></td>
-                                <td><select name="project_priority_level">
-                                    <option value="Low" <?php echo $project['project_priority_level'] == 'Low' ? 'selected' : ''; ?>>Low</option>
-                                    <option value="Medium" <?php echo $project['project_priority_level'] == 'Medium' ? 'selected' : ''; ?>>Medium</option>
-                                    <option value="High" <?php echo $project['project_priority_level'] == 'High' ? 'selected' : ''; ?>>High</option>
-                                </select></td>
+
+                                <?php $isResearchAssistant = ($_SESSION['role'] === 'Research Assistant'); ?>
+
                                 <td>
-                                    <select name="assigned_to">
-                                        <?php foreach ($users as $user): ?>
-                                            <?php if ($user['role'] === 'Research Assistant'): ?>
-                                                <option value="<?php echo htmlspecialchars($user['user_id']); ?>" 
-                                                    <?php echo isset($project['assigned_to']) && $project['assigned_to'] == $user['user_id'] ? 'selected' : ''; ?>>
-                                                    <?php echo htmlspecialchars($user['name']); ?>
-                                                </option>
-                                            <?php endif; ?>
-                                        <?php endforeach; ?>
-                                    </select>
+                                    <?php if ($isResearchAssistant): ?>
+                                        <?php echo htmlspecialchars($project['title']); ?>
+                                    <?php else: ?>
+                                        <input type="text" name="title" value="<?php echo htmlspecialchars($project['title']); ?>">
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if ($isResearchAssistant): ?>
+                                        <?php echo htmlspecialchars($project['description']); ?>
+                                    <?php else: ?>
+                                        <input type="text" name="description" value="<?php echo htmlspecialchars($project['description']); ?>">
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if ($isResearchAssistant): ?>
+                                        <?php echo htmlspecialchars($project['funding']); ?>
+                                    <?php else: ?>
+                                        <input type="number" name="funding" step="0.01" value="<?php echo $project['funding']; ?>">
+                                    <?php endif; ?>
+                                    
+                                </td>
+                                <td>
+                                    <?php if ($isResearchAssistant): ?>
+                                        <?php echo htmlspecialchars($project['status']); ?>
+                                    <?php else: ?>
+                                        <select name="status">
+                                            <option value="Ongoing" <?php echo $project['status'] == 'Ongoing' ? 'selected' : ''; ?>>Ongoing</option>
+                                            <option value="Completed" <?php echo $project['status'] == 'Completed' ? 'selected' : ''; ?>>Completed</option>
+                                        </select>
+                                    <?php endif; ?>
+                                    
+                                </td>
+                                <td>
+                                    <?php if ($isResearchAssistant): ?>
+                                        <?php echo htmlspecialchars($project['project_priority_level']); ?>
+                                    <?php else: ?>
+                                        <select name="project_priority_level">
+                                            <option value="Low" <?php echo $project['project_priority_level'] == 'Low' ? 'selected' : ''; ?>>Low</option>
+                                            <option value="Medium" <?php echo $project['project_priority_level'] == 'Medium' ? 'selected' : ''; ?>>Medium</option>
+                                            <option value="High" <?php echo $project['project_priority_level'] == 'High' ? 'selected' : ''; ?>>High</option>
+                                        </select>
+                                    <?php endif; ?>
+                                    
+                                </td>
+                                <td>
+                                    <?php if ($isResearchAssistant): ?>
+                                        <?php 
+                                            foreach ($users as $user) {
+                                                if ($user['user_id'] == $project['assigned_to']) {
+                                                    echo htmlspecialchars($user['name']);
+                                                    break;
+                                                }
+                                            }
+                                        ?>
+                                    <?php else: ?>
+                                        <select name="assigned_to">
+                                            <?php foreach ($users as $user): ?>
+                                                <?php if ($user['role'] === 'Research Assistant'): ?>
+                                                    <option value="<?php echo htmlspecialchars($user['user_id']); ?>" 
+                                                        <?php echo (isset($project['assigned_to']) && $project['assigned_to'] == $user['user_id']) ? 'selected' : ''; ?>>
+                                                        <?php echo htmlspecialchars($user['name']); ?>
+                                                    </option>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <div class="button-container">
