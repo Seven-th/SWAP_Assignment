@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS project (
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     funding DECIMAL(10, 2),
-    status ENUM('Ongoing', 'Completed') DEFAULT 'Ongoing',
+    status ENUM('Ongoing', 'Completed'),
     project_priority_level ENUM('Low', 'Medium', 'High') NOT NULL,
     generated_by INT NOT NULL,
     assigned_to TEXT NOT NULL,

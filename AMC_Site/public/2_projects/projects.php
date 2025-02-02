@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $priority = $_POST['project_priority_level'];
         $assigned_to = $_POST['assigned_to'];
         
-        if (!empty($title) && !empty($description) && in_array($status, ['Ongoing', 'Completed']) && in_array($priority, ['Low', 'Medium', 'High'])) {
+        if (!empty($title) && !empty($description) && !empty($assigned_to) && in_array($status, ['Ongoing', 'Completed']) && in_array($priority, ['Low', 'Medium', 'High']) && !empty($assigned_to)) {
             $stmt = $pdo->prepare("INSERT INTO project (title, description, funding, status, project_priority_level, assigned_to) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->execute([$title, $description, $funding, $status, $priority, $assigned_to]);
             
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $priority = $_POST['project_priority_level'];
         $assigned_to = $_POST['assigned_to'];
         
-        if ($project_id > 0 && !empty($title) && !empty($description) && in_array($status, ['Ongoing', 'Completed']) && in_array($priority, ['Low', 'Medium', 'High'])) {
+        if ($project_id > 0 && !empty($title) && !empty($description) && !empty($assigned_to) && in_array($status, ['Ongoing', 'Completed']) && in_array($priority, ['Low', 'Medium', 'High']) && !empty($assigned_to)) {
             $stmt = $pdo->prepare("UPDATE project SET title = ?, description = ?, funding = ?, status = ?, project_priority_level = ?, assigned_to = ? WHERE project_id = ?");
             $stmt->execute([$title, $description, $funding, $status, $priority, $assigned_to, $project_id]);
 

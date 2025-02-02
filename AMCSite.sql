@@ -19,7 +19,7 @@ CREATE TABLE project (
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     funding DECIMAL(10, 2) NOT NULL,
-    status ENUM('Ongoing', 'Completed') DEFAULT 'Ongoing' NOT NULL,
+    status ENUM('Ongoing', 'Completed') NOT NULL,
     project_priority_level ENUM('Low', 'Medium', 'High') NOT NULL,
     assigned_to INT NOT NULL
 );
