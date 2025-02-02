@@ -138,15 +138,27 @@ try {
         <table>
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th style="width: 140px">Funding</th>
-                    <th style="width: 160px">Status</th>
-                    <th style="width: 140px">Priority</th>
-                    <th style="width: 140px">Assigned To <br>
+                    <th>Title<br>
+                        <sub style="font-size: 12px">(Title of Project)</sub>
+                    </th>
+                    <th>Description<br>
+                        <sub style="font-size: 12px">(Description of Project)</sub>
+                    </th>
+                    <th style="width: 140px">Funding<br>
+                        <sub style="font-size: 12px">(Funding of Project)</sub>
+                    </th>
+                    <th style="width: 160px">Status<br>
+                        <sub style="font-size: 12px">(Status of Project)</sub>
+                    </th>
+                    <th style="width: 140px">Priority<br>
+                        <sub style="font-size: 12px">(Priority of Project)</sub>
+                    </th>
+                    <th style="width: 140px">Assigned To<br>
                         <sub style="font-size: 12px">(Assistant Researcher)</sub>
                     </th>
-                    <th>Actions</th>
+                    <th>Actions<br>
+                        <sub style="font-size: 12px">(Done by Admin and Researcher only)</sub>
+                    </th>
                 </tr>
                 <?php if (($_SESSION['role'] != 'Research Assistant')): ?>
                     <tr>
@@ -154,7 +166,7 @@ try {
                             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                             <td><input type="text" name="title" placeholder="Title" required></td>
                             <td><input type="text" name="description" placeholder="Description" required></td>
-                            <td><input type="number" name="funding" placeholder="Funding" step="0.01" required></td>
+                            <td><input type="number" name="funding" placeholder="Funding" step="0.01" min="0" required></td>
                             <td><select name="status" required>
                                 <option value="">-Select-</option>
                                 <option value="Ongoing">Ongoing</option>
@@ -197,46 +209,43 @@ try {
                                     <?php if ($isResearchAssistant): ?>
                                         <?php echo htmlspecialchars($project['title']); ?>
                                     <?php else: ?>
-                                        <input type="text" name="title" value="<?php echo htmlspecialchars($project['title']); ?>">
+                                        <input type="text" name="title" value="<?php echo htmlspecialchars($project['title']); ?>" required>
                                     <?php endif; ?>
                                 </td>
                                 <td>
                                     <?php if ($isResearchAssistant): ?>
                                         <?php echo htmlspecialchars($project['description']); ?>
                                     <?php else: ?>
-                                        <input type="text" name="description" value="<?php echo htmlspecialchars($project['description']); ?>">
+                                        <input type="text" name="description" value="<?php echo htmlspecialchars($project['description']); ?>" required>
                                     <?php endif; ?>
                                 </td>
                                 <td>
                                     <?php if ($isResearchAssistant): ?>
                                         <?php echo htmlspecialchars($project['funding']); ?>
                                     <?php else: ?>
-                                        <input type="number" name="funding" step="0.01" value="<?php echo $project['funding']; ?>">
+                                        <input type="number" name="funding" step="0.01" value="<?php echo $project['funding']; ?>" min="0" required>
                                     <?php endif; ?>
-                                    
                                 </td>
                                 <td>
                                     <?php if ($isResearchAssistant): ?>
                                         <?php echo htmlspecialchars($project['status']); ?>
                                     <?php else: ?>
-                                        <select name="status">
+                                        <select name="status" required>
                                             <option value="Ongoing" <?php echo $project['status'] == 'Ongoing' ? 'selected' : ''; ?>>Ongoing</option>
                                             <option value="Completed" <?php echo $project['status'] == 'Completed' ? 'selected' : ''; ?>>Completed</option>
                                         </select>
                                     <?php endif; ?>
-                                    
                                 </td>
                                 <td>
                                     <?php if ($isResearchAssistant): ?>
                                         <?php echo htmlspecialchars($project['project_priority_level']); ?>
                                     <?php else: ?>
-                                        <select name="project_priority_level">
+                                        <select name="project_priority_level" required>
                                             <option value="Low" <?php echo $project['project_priority_level'] == 'Low' ? 'selected' : ''; ?>>Low</option>
                                             <option value="Medium" <?php echo $project['project_priority_level'] == 'Medium' ? 'selected' : ''; ?>>Medium</option>
                                             <option value="High" <?php echo $project['project_priority_level'] == 'High' ? 'selected' : ''; ?>>High</option>
                                         </select>
                                     <?php endif; ?>
-                                    
                                 </td>
                                 <td>
                                     <?php if ($isResearchAssistant): ?>
