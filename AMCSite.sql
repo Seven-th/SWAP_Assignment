@@ -55,4 +55,4 @@ CREATE TABLE password_reset_requests (
 
 -- Insert Users
 INSERT INTO user (name, email, phone_number, password, role, password_set) 
-VALUES ('a', 'a@amc.com', '81111111', 'password', 'Admin', TRUE);
+VALUES ('a', 'a@amc.com', '6581111111', 'password', 'Admin', TRUE);

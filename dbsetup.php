@@ -117,7 +117,7 @@ VALUES (?, ?, ?, ?, ?, ?)
 ");
 $name = 'a';
 $email = 'a@amc.com';
-$phone_number = '81111111';
+$phone_number = '6581111111';
 $password = 'password'; // In a real application, make sure to hash the password
 $role = 'Admin';
 $password_set = TRUE;

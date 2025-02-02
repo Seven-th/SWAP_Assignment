@@ -8,13 +8,7 @@ $_SESSION['error'] = '';
 
 // Role-based access control
 if (!isset($_SESSION['role'])) {
-    header("Location: /SWAP_Assignment/AMC_Site/public/login.php");
-    exit();
-}
-
-// Restrict Research Assistants from accessing this page
-if ($_SESSION['role'] === 'Research Assistant') {
-    header("Location: /SWAP_Assignment/AMC_Site/public/unauthorized.php");
+    header("Location: /SWAP_Assignment/AMC_Site/public/login_form.php");
     exit();
 }
 
@@ -134,25 +128,27 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <th>Assigned To</th>
                     <th>Actions</th>
                 </tr>
-                <tr>
-                    <form method="post">
-                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                        <td><input type="text" name="title" placeholder="Title" required></td>
-                        <td><input type="text" name="description" placeholder="Description" required></td>
-                        <td><input type="number" name="funding" placeholder="Funding" step="0.01" required></td>
-                        <td><select name="status">
-                            <option value="Ongoing">Ongoing</option>
-                            <option value="Completed">Completed</option>
-                        </select></td>
-                        <td><select name="project_priority_level">
-                            <option value="Low">Low</option>
-                            <option value="Medium">Medium</option>
-                            <option value="High">High</option>
-                        </select></td>
-                        <td><input type="text" name="assigned_to" placeholder="Assigned To" required></td>
-                        <td><input type="submit" name="action" value="Add"></td>
-                    </form>
-                </tr>
+                <?php if (($_SESSION['role'] != 'Research Assistant')): ?>
+                    <tr>
+                        <form method="post">
+                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                            <td><input type="text" name="title" placeholder="Title" required></td>
+                            <td><input type="text" name="description" placeholder="Description" required></td>
+                            <td><input type="number" name="funding" placeholder="Funding" step="0.01" required></td>
+                            <td><select name="status">
+                                <option value="Ongoing">Ongoing</option>
+                                <option value="Completed">Completed</option>
+                            </select></td>
+                            <td><select name="project_priority_level">
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select></td>
+                            <td><input type="text" name="assigned_to" placeholder="Assigned To" required></td>
+                            <td><input type="submit" name="action" value="Add"></td>
+                        </form>
+                    </tr>
+                <?php endif; ?>
             </thead>
             <tbody>
                 <?php if (!empty($projects)): ?>
@@ -175,14 +171,14 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </select></td>
                                 <td><input type="text" name="assigned_to" value="<?php echo htmlspecialchars($project['assigned_to']); ?>"></td>
                                 <td>
-                                    <input type="submit" name="action" value="Update"><input type="submit" name="action" value="Delete">
+                                    <input type="submit" name="action" value="Update"><?php if (($_SESSION['role'] != 'Research Assistant')): ?><input type="submit" name="action" value="Delete"><?php endif; ?>
                                 </td>
                             </form>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="7">No equipment found in the inventory.</td>
+                        <td colspan="7">No projects found for user.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
