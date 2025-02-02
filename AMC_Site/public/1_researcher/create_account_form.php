@@ -68,8 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // DELETE operation
 if (isset($_GET['id'])) {
-    // Ensure only Admins can delete users
-    if ($_GET['id'] !== $_SESSION['user_id']) {
+    // Ensure you don't delete yourself
+    if (intval($_GET['id']) !== $_SESSION['user_id']) {
+        // Ensure only Admins can delete users
         if (isset($_SESSION['role']) && $_SESSION['role'] === 'Admin') {
             $user_id = intval($_GET['id']);
             try {
