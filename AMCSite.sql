@@ -1,3 +1,5 @@
+-- Copyright 2304712I Ng Yong Kiat Shawn
+
 -- Create the database
 CREATE DATABASE AMCSite;
 USE AMCSite;

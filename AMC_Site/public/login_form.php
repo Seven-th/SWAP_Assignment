@@ -1,3 +1,5 @@
+<!-- Copyright 2025 Ng Yong Kiat Shawn (Login form) -->
+
 <?php
 
 session_start();

@@ -1,3 +1,5 @@
+<!-- Copyright 2025 Ng Yong Kiat Shawn -->
+
 <?php
 require 'C:\xampp\htdocs\SWAP_Assignment\AMC_Site\config\database_connection.php';
 
