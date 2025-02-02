@@ -8,7 +8,7 @@ $_SESSION['error']   = '';
 
 // Ensure the user is logged in
 if (!isset($_SESSION['role'])) {
-    header("Location: /SWAP_Assignment/AMC_Site/public/login.php");
+    header("Location: /SWAP_Assignment/AMC_Site/public/login_form.php");
     exit();
 }
 
