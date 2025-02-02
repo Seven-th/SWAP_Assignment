@@ -69,9 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // DELETE operation
 if (isset($_GET['id'])) {
     // Ensure only Admins can delete users
-    if (isset($_SESSION['role']) || $_SESSION['role'] === 'Admin') {
+    if (isset($_SESSION['role']) && $_SESSION['role'] === 'Admin') {
         $user_id = intval($_GET['id']);
-
         try {
             // Delete researcher from database
             $stmt = $pdo->prepare("DELETE FROM user WHERE user_id = :id");
