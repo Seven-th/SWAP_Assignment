@@ -71,11 +71,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'role' => $role,
                     'id' => $user_id
                 ]);
-
-                $success = "User details updated successfully!";
-                // Refresh user data
-                header("Refresh:2; url=create_account_form.php");
-        
+                if ($user_id === $_SESSION['user_id']) {
+                    $success = "User details updated successfully! Please login again for these changes to take effect!";
+                    header("Refresh:2; url=..\login_form.php");
+                } else {
+                    $success = "User details updated successfully!";
+                    // Refresh user data
+                    header("Refresh:2; url=create_account_form.php");
+                }
         } catch (PDOException $e) {
             $error = "Error updating user: " . $e->getMessage();
         }
