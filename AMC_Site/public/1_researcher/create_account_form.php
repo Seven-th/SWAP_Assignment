@@ -69,21 +69,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // DELETE operation
 if (isset($_GET['id'])) {
     // Ensure only Admins can delete users
-    if (isset($_SESSION['role']) && $_SESSION['role'] === 'Admin') {
-        $user_id = intval($_GET['id']);
-        try {
-            // Delete researcher from database
-            $stmt = $pdo->prepare("DELETE FROM user WHERE user_id = :id");
-            $stmt->execute(['id' => $user_id]);
+    if ($_GET['id'] !== $_SESSION['user_id']) {
+        if (isset($_SESSION['role']) && $_SESSION['role'] === 'Admin') {
+            $user_id = intval($_GET['id']);
+            try {
+                // Delete researcher from database
+                $stmt = $pdo->prepare("DELETE FROM user WHERE user_id = :id");
+                $stmt->execute(['id' => $user_id]);
 
-            // Redirect back to researcher list after deletion
-            header("Location: create_account_form.php?msg=Researcher deleted successfully");
-            exit;
-        } catch (PDOException $e) {
-            die("Error deleting researcher: " . $e->getMessage());
+                // Redirect back to researcher list after deletion
+                header("Location: create_account_form.php?msg=Researcher deleted successfully");
+                exit;
+            } catch (PDOException $e) {
+                die("Error deleting researcher: " . $e->getMessage());
+            }
+        } else {
+            die("Access denied. Only admins can perform this action.");
         }
     } else {
-        die("Access denied. Only admins can perform this action.");
+        die("You cannot delete the user you are current logged in as.");
     }
 }
 ?>
