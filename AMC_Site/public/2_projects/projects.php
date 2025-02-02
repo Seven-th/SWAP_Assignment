@@ -30,13 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
     // Add Project
-    if ($action === 'Add' && ($user_role === 'Admin' || $user_role === 'Research Assistant')) {
+    if ($action === 'Add' && ($user_role === 'Admin' || $user_role === 'Researcher')) {
         $title = trim($_POST['title']);
         $description = trim($_POST['description']);
         $funding = floatval($_POST['funding']);
         $status = $_POST['status'];
         $priority = $_POST['project_priority_level'];
-        $assigned_to = trim($_POST['assigned_to']);
+        $assigned_to = $_POST['assigned_to'];
         
         if (!empty($title) && !empty($description) && in_array($status, ['Ongoing', 'Completed']) && in_array($priority, ['Low', 'Medium', 'High'])) {
             $stmt = $pdo->prepare("INSERT INTO project (title, description, funding, status, project_priority_level, assigned_to) VALUES (?, ?, ?, ?, ?, ?)");
@@ -53,14 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 
     // Update Project
-    elseif ($action === 'Update' && ($user_role === 'Admin' || $user_role === 'Research Assistant')) {
+    elseif ($action === 'Update') {
         $project_id = intval($_POST['project_id']);
         $title = trim($_POST['title']);
         $description = trim($_POST['description']);
         $funding = floatval($_POST['funding']);
         $status = $_POST['status'];
         $priority = $_POST['project_priority_level'];
-        $assigned_to = trim($_POST['assigned_to']);
+        $assigned_to = $_POST['assigned_to'];
         
         if ($project_id > 0 && !empty($title) && !empty($description) && in_array($status, ['Ongoing', 'Completed']) && in_array($priority, ['Low', 'Medium', 'High'])) {
             $stmt = $pdo->prepare("UPDATE project SET title = ?, description = ?, funding = ?, status = ?, project_priority_level = ?, assigned_to = ? WHERE project_id = ?");
@@ -99,9 +99,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     exit();
 }
 
-$stmt = $pdo->prepare("SELECT * FROM project");
-$stmt->execute();
+// Check if the user is a Research Assistant
+if ($user_role === 'Research Assistant') {
+    $stmt = $pdo->prepare("SELECT * FROM project WHERE assigned_to = ?");
+    $stmt->execute([$user_id]);
+} else {
+    // Admin or other roles can see all projects
+    $stmt = $pdo->prepare("SELECT * FROM project");
+    $stmt->execute();
+}
 $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<?php
+
+// Fetch users from the 'users' table
+try {
+    $user_stmt = $pdo->query("SELECT user_id, name, role FROM user");
+    $users = $user_stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch as associative array
+} catch (PDOException $e) {
+    die("Database error: " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -125,7 +143,9 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <th>Funding</th>
                     <th>Status</th>
                     <th>Priority</th>
-                    <th>Assigned To</th>
+                    <th>Assigned To
+                        <sub style="font-size: 12px">(Assistant Researcher)</sub>
+                    </th>
                     <th>Actions</th>
                 </tr>
                 <?php if (($_SESSION['role'] != 'Research Assistant')): ?>
@@ -144,7 +164,18 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <option value="Medium">Medium</option>
                                 <option value="High">High</option>
                             </select></td>
-                            <td><input type="text" name="assigned_to" placeholder="Assigned To" required></td>
+                            <td>
+                                <select name="assigned_to">
+                                    <option value="">-Select-</option>
+                                    <?php foreach ($users as $user): ?>
+                                        <?php if ($user['role'] === 'Research Assistant'): ?>
+                                            <option value="<?php echo htmlspecialchars($user['user_id']); ?>">
+                                                <?php echo htmlspecialchars($user['name']); ?>
+                                            </option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
                             <td><input type="submit" name="action" value="Add"></td>
                         </form>
                     </tr>
@@ -169,9 +200,31 @@ $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <option value="Medium" <?php echo $project['project_priority_level'] == 'Medium' ? 'selected' : ''; ?>>Medium</option>
                                     <option value="High" <?php echo $project['project_priority_level'] == 'High' ? 'selected' : ''; ?>>High</option>
                                 </select></td>
-                                <td><input type="text" name="assigned_to" value="<?php echo htmlspecialchars($project['assigned_to']); ?>"></td>
                                 <td>
-                                    <input type="submit" name="action" value="Update"><?php if (($_SESSION['role'] != 'Research Assistant')): ?><input type="submit" name="action" value="Delete"><?php endif; ?>
+                                    <select name="assigned_to">
+                                        <?php foreach ($users as $user): ?>
+                                            <?php if ($user['role'] === 'Research Assistant'): ?>
+                                                <option value="<?php echo htmlspecialchars($user['user_id']); ?>" 
+                                                    <?php echo isset($project['assigned_to']) && $project['assigned_to'] == $user['user_id'] ? 'selected' : ''; ?>>
+                                                    <?php echo htmlspecialchars($user['name']); ?>
+                                                </option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="button-container">
+                                        <?php if (($_SESSION['role'] != 'Research Assistant')): ?>
+                                            <input type="submit" name="action" value="Update">
+                                        <?php else: ?>
+                                            <input type="submit" name="action" value="Update" disabled style="background-color: #ccc; color: #777; border: 1px solid #aaa; cursor: not-allowed;">
+                                        <?php endif; ?>
+                                        <?php if (($_SESSION['role'] === 'Admin' && $project['status'] ==="Ongoing")): ?>
+                                            <input type="submit" name="action" value="Delete">
+                                        <?php else: ?>
+                                            <input type="submit" name="action" value="Delete" disabled style="background-color: #ccc; color: #777; border: 1px solid #aaa; cursor: not-allowed;">
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
                             </form>
                         </tr>
